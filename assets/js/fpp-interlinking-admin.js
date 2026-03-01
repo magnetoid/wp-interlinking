@@ -34,16 +34,18 @@
 		},
 
 		bindEvents: function() {
+			// All bindings use event delegation so they work after AJAX tab switching.
+
 			// Keyword CRUD.
-			$('#fpp-add-keyword').on('click', this.addKeyword);
-			$('#fpp-update-keyword').on('click', this.updateKeyword);
-			$('#fpp-cancel-edit').on('click', this.cancelEdit);
+			$(document).on('click', '#fpp-add-keyword', this.addKeyword);
+			$(document).on('click', '#fpp-update-keyword', this.updateKeyword);
+			$(document).on('click', '#fpp-cancel-edit', this.cancelEdit);
 			$(document).on('click', '.fpp-edit-keyword', this.editKeyword);
 			$(document).on('click', '.fpp-delete-keyword', this.deleteKeyword);
 			$(document).on('click', '.fpp-toggle-keyword', this.toggleKeyword);
 
 			// Quick-Add Post Search.
-			$('#fpp-post-search').on('input', FPP.createDebounce(FPP.searchPosts, 300));
+			$(document).on('input', '#fpp-post-search', FPP.createDebounce(FPP.searchPosts, 300));
 			$(document).on('click', '.fpp-search-result-item', this.selectSearchResult);
 			$(document).on('click', this.dismissSearchDropdown);
 
@@ -53,52 +55,52 @@
 			$(document).on('click', '.fpp-close-scan', this.closeScanResults);
 
 			// Suggest Keywords.
-			$('#fpp-toggle-suggestions').on('click', this.toggleSuggestions);
-			$('#fpp-scan-titles').on('click', this.scanTitles);
-			$('#fpp-suggestions-prev').on('click', function() { FPP.loadSuggestionsPage(FPP.suggestionsPage - 1); });
-			$('#fpp-suggestions-next').on('click', function() { FPP.loadSuggestionsPage(FPP.suggestionsPage + 1); });
+			$(document).on('click', '#fpp-toggle-suggestions', this.toggleSuggestions);
+			$(document).on('click', '#fpp-scan-titles', this.scanTitles);
+			$(document).on('click', '#fpp-suggestions-prev', function() { FPP.loadSuggestionsPage(FPP.suggestionsPage - 1); });
+			$(document).on('click', '#fpp-suggestions-next', function() { FPP.loadSuggestionsPage(FPP.suggestionsPage + 1); });
 			$(document).on('click', '.fpp-add-suggestion', this.addSuggestion);
 
 			// Analysis section toggles.
-			$('#fpp-toggle-ai-extract').on('click', function() { FPP.toggleSection($(this), '#fpp-ai-extract-content'); });
-			$('#fpp-toggle-ai-score').on('click', function() { FPP.toggleSection($(this), '#fpp-ai-score-content'); });
-			$('#fpp-toggle-ai-gaps').on('click', function() { FPP.toggleSection($(this), '#fpp-ai-gaps-content'); });
-			$('#fpp-toggle-ai-generate').on('click', function() { FPP.toggleSection($(this), '#fpp-ai-generate-content'); });
+			$(document).on('click', '#fpp-toggle-ai-extract', function() { FPP.toggleSection($(this), '#fpp-ai-extract-content'); });
+			$(document).on('click', '#fpp-toggle-ai-score', function() { FPP.toggleSection($(this), '#fpp-ai-score-content'); });
+			$(document).on('click', '#fpp-toggle-ai-gaps', function() { FPP.toggleSection($(this), '#fpp-ai-gaps-content'); });
+			$(document).on('click', '#fpp-toggle-ai-generate', function() { FPP.toggleSection($(this), '#fpp-ai-generate-content'); });
 
 			// Analysis Tools (use dispatcher endpoints).
-			$('#fpp-ai-extract-search').on('input', FPP.createDebounce(FPP.aiExtractSearch, 300));
+			$(document).on('input', '#fpp-ai-extract-search', FPP.createDebounce(FPP.aiExtractSearch, 300));
 			$(document).on('click', '.fpp-ai-extract-result-item', FPP.aiExtractSelectPost);
-			$('#fpp-ai-extract-btn').on('click', FPP.analyzeExtract);
-			$('#fpp-ai-score-btn').on('click', FPP.analyzeScore);
-			$('#fpp-ai-gaps-btn').on('click', FPP.analyzeGaps);
-			$('#fpp-ai-generate-btn').on('click', FPP.analyzeGenerate);
-			$('#fpp-ai-add-all-btn').on('click', FPP.aiAddAllMappings);
+			$(document).on('click', '#fpp-ai-extract-btn', FPP.analyzeExtract);
+			$(document).on('click', '#fpp-ai-score-btn', FPP.analyzeScore);
+			$(document).on('click', '#fpp-ai-gaps-btn', FPP.analyzeGaps);
+			$(document).on('click', '#fpp-ai-generate-btn', FPP.analyzeGenerate);
+			$(document).on('click', '#fpp-ai-add-all-btn', FPP.aiAddAllMappings);
 			$(document).on('click', '.fpp-ai-add-mapping', FPP.aiAddMapping);
 
 			// Settings: engine toggle.
-			$('input[name="fpp_analysis_engine"]').on('change', function() {
+			$(document).on('change', 'input[name="fpp_analysis_engine"]', function() {
 				$('#fpp-ai-config').toggle($(this).val() === 'ai');
 			});
 
 			// Settings: save all.
-			$('#fpp-save-all-settings').on('click', FPP.saveAllSettings);
-			$('#fpp-save-settings').on('click', FPP.saveAllSettings);
+			$(document).on('click', '#fpp-save-all-settings', FPP.saveAllSettings);
+			$(document).on('click', '#fpp-save-settings', FPP.saveAllSettings);
 
 			// AI specific.
-			$('#fpp-test-ai-connection').on('click', FPP.testAiConnection);
-			$('#fpp-ai-provider').on('change', FPP.onProviderChange);
+			$(document).on('click', '#fpp-test-ai-connection', FPP.testAiConnection);
+			$(document).on('change', '#fpp-ai-provider', FPP.onProviderChange);
 
 			// Keywords table: search, pagination, bulk ops, import/export.
-			$('#fpp-keyword-search').on('input', FPP.createDebounce(function() {
+			$(document).on('input', '#fpp-keyword-search', FPP.createDebounce(function() {
 				FPP.keywordsSearch = $.trim($('#fpp-keyword-search').val());
 				FPP.loadKeywordsTable(1);
 			}, 400));
-			$('#fpp-keywords-prev').on('click', function() { FPP.loadKeywordsTable(FPP.keywordsPage - 1); });
-			$('#fpp-keywords-next').on('click', function() { FPP.loadKeywordsTable(FPP.keywordsPage + 1); });
-			$('#fpp-select-all').on('change', FPP.toggleSelectAll);
-			$('#fpp-bulk-apply').on('click', FPP.applyBulkAction);
-			$('#fpp-export-csv').on('click', FPP.exportCsv);
-			$('#fpp-import-csv-file').on('change', FPP.importCsv);
+			$(document).on('click', '#fpp-keywords-prev', function() { FPP.loadKeywordsTable(FPP.keywordsPage - 1); });
+			$(document).on('click', '#fpp-keywords-next', function() { FPP.loadKeywordsTable(FPP.keywordsPage + 1); });
+			$(document).on('change', '#fpp-select-all', FPP.toggleSelectAll);
+			$(document).on('click', '#fpp-bulk-apply', FPP.applyBulkAction);
+			$(document).on('click', '#fpp-export-csv', FPP.exportCsv);
+			$(document).on('change', '#fpp-import-csv-file', FPP.importCsv);
 
 			// Analytics period.
 			$(document).on('click', '.fpp-period-btn', function() {
@@ -1618,6 +1620,9 @@
 				if (response.success) {
 					$('.fpp-tab-content').html(response.data.html);
 					FPP.initCurrentTab();
+				} else {
+					var msg = (response.data && response.data.message) ? response.data.message : fppInterlinking.i18n.request_failed;
+					$('.fpp-tab-content').html('<p>' + FPP.escHtml(msg) + '</p>');
 				}
 			}).fail(function() {
 				$('.fpp-tab-content').html('<p>' + FPP.escHtml(fppInterlinking.i18n.request_failed) + '</p>');

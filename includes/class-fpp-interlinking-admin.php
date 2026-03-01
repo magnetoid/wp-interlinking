@@ -848,11 +848,20 @@ class FPP_Interlinking_Admin {
 			<h2><?php esc_html_e( 'Post Types', 'fpp-interlinking' ); ?></h2>
 			<fieldset id="fpp-post-types-fieldset">
 				<?php
-				$all_post_types = get_post_types( array( 'public' => true ), 'objects' );
-				foreach ( $all_post_types as $pt ) :
-					if ( 'attachment' === $pt->name ) {
+				// Merge public + publicly_queryable to catch WooCommerce products, custom post types, etc.
+				$public_types    = get_post_types( array( 'public' => true ), 'objects' );
+				$queryable_types = get_post_types( array( 'publicly_queryable' => true ), 'objects' );
+				$all_post_types  = array_merge( $public_types, $queryable_types );
+				// Remove duplicates by name.
+				$seen = array();
+				foreach ( $all_post_types as $key => $pt ) {
+					if ( 'attachment' === $pt->name || isset( $seen[ $pt->name ] ) ) {
+						unset( $all_post_types[ $key ] );
 						continue;
 					}
+					$seen[ $pt->name ] = true;
+				}
+				foreach ( $all_post_types as $pt ) :
 				?>
 					<label>
 						<input type="checkbox" class="fpp-post-type-checkbox" value="<?php echo esc_attr( $pt->name ); ?>"
@@ -862,7 +871,7 @@ class FPP_Interlinking_Admin {
 					</label><br />
 				<?php endforeach; ?>
 			</fieldset>
-			<p class="description"><?php esc_html_e( 'Select which post types should have keyword replacement applied.', 'fpp-interlinking' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Select which post types the plugin should process. Includes posts, pages, products, and all custom post types.', 'fpp-interlinking' ); ?></p>
 		</div>
 
 		<hr />
@@ -940,7 +949,7 @@ class FPP_Interlinking_Admin {
 							<?php
 							$model_hints = array();
 							foreach ( FPP_Interlinking_AI::PROVIDER_INFO as $key => $info ) {
-								$models = implode( ', ', $info['models'] );
+								$models = is_array( $info['models'] ) ? implode( ', ', $info['models'] ) : $info['models'];
 								$model_hints[] = $info['label'] . ': ' . $models;
 							}
 							echo esc_html( implode( '. ', $model_hints ) . '.' );

@@ -25,6 +25,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 class FPP_Interlinking_Replacer {
 
 	/**
+	 * Pending impression data to flush on shutdown.
+	 *
+	 * @since 4.0.0
+	 * @var array
+	 */
+	private static $pending_impressions = array();
+
+	/**
+	 * Whether the shutdown hook has been registered.
+	 *
+	 * @since 4.0.0
+	 * @var bool
+	 */
+	private static $shutdown_registered = false;
+
+	/**
 	 * Register the content filter.
 	 *
 	 * @since 1.0.0
@@ -208,7 +224,63 @@ class FPP_Interlinking_Replacer {
 			unset( $part );
 		}
 
+		// v4.0.0: Collect keyword IDs that were linked for impression tracking.
+		if ( $total_links > 0 && $post_id && (int) get_option( 'fpp_interlinking_enable_tracking', 1 ) ) {
+			$linked_ids = array();
+			foreach ( $keywords as $mapping ) {
+				// Check if this keyword was actually linked by looking for its tracking attribute in the output.
+				if ( strpos( implode( '', $parts ), 'data-fpp-keyword-id="' . esc_attr( $mapping['id'] ) . '"' ) !== false ) {
+					$linked_ids[] = (int) $mapping['id'];
+				}
+			}
+			if ( ! empty( $linked_ids ) ) {
+				self::$pending_impressions[] = array(
+					'keyword_ids' => $linked_ids,
+					'post_id'     => (int) $post_id,
+				);
+				if ( ! self::$shutdown_registered ) {
+					add_action( 'shutdown', array( __CLASS__, 'flush_impressions' ) );
+					self::$shutdown_registered = true;
+				}
+			}
+		}
+
 		return implode( '', $parts );
+	}
+
+	/**
+	 * Batch-insert impression data on shutdown.
+	 *
+	 * Uses INSERT ... ON DUPLICATE KEY UPDATE to aggregate daily counts
+	 * without creating duplicate rows.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public static function flush_impressions() {
+		if ( empty( self::$pending_impressions ) ) {
+			return;
+		}
+
+		global $wpdb;
+		$table = $wpdb->prefix . 'fpp_interlinking_impressions';
+		$today = current_time( 'Y-m-d' );
+
+		foreach ( self::$pending_impressions as $entry ) {
+			foreach ( $entry['keyword_ids'] as $keyword_id ) {
+				$wpdb->query( $wpdb->prepare(
+					"INSERT INTO {$table} (keyword_id, post_id, impression_date, impression_count)
+					 VALUES (%d, %d, %s, 1)
+					 ON DUPLICATE KEY UPDATE impression_count = impression_count + 1",
+					$keyword_id,
+					$entry['post_id'],
+					$today
+				) );
+			}
+		}
+
+		self::$pending_impressions = array();
 	}
 
 	/**

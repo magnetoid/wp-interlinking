@@ -30,10 +30,12 @@ function fpp_interlinking_uninstall_site() {
 	global $wpdb;
 
 	// Drop tables.
-	$keywords_table = $wpdb->prefix . 'fpp_interlinking_keywords';
-	$clicks_table   = $wpdb->prefix . 'fpp_interlinking_clicks';
+	$keywords_table    = $wpdb->prefix . 'fpp_interlinking_keywords';
+	$clicks_table      = $wpdb->prefix . 'fpp_interlinking_clicks';
+	$impressions_table = $wpdb->prefix . 'fpp_interlinking_impressions';
 	$wpdb->query( "DROP TABLE IF EXISTS {$keywords_table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	$wpdb->query( "DROP TABLE IF EXISTS {$clicks_table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$wpdb->query( "DROP TABLE IF EXISTS {$impressions_table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 	// Remove options.
 	delete_option( 'fpp_interlinking_max_replacements' );
@@ -55,6 +57,9 @@ function fpp_interlinking_uninstall_site() {
 	delete_option( 'fpp_interlinking_analysis_engine' );
 	delete_option( 'fpp_interlinking_enable_tracking' );
 	delete_option( 'fpp_interlinking_tracking_retention_days' );
+
+	// v4.0.0 options.
+	delete_option( 'fpp_interlinking_ai_base_url' );
 
 	// Remove transients.
 	delete_transient( 'fpp_interlinking_keywords_cache' );

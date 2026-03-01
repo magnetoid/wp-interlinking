@@ -78,9 +78,23 @@ class FPP_Interlinking_Activator {
 			KEY clicked_at_idx (clicked_at)
 		) {$charset_collate};";
 
+		// v4.0.0: Impressions table for CTR tracking.
+		$impressions_table = $wpdb->prefix . 'fpp_interlinking_impressions';
+		$sql_impressions = "CREATE TABLE {$impressions_table} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			keyword_id bigint(20) unsigned NOT NULL,
+			post_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			impression_date date NOT NULL,
+			impression_count int(11) unsigned NOT NULL DEFAULT 0,
+			PRIMARY KEY  (id),
+			UNIQUE KEY keyword_post_date (keyword_id, post_id, impression_date),
+			KEY impression_date_idx (impression_date)
+		) {$charset_collate};";
+
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql_keywords );
 		dbDelta( $sql_clicks );
+		dbDelta( $sql_impressions );
 	}
 
 	/**
@@ -123,6 +137,9 @@ class FPP_Interlinking_Activator {
 
 		// v3.0.0: Analysis engine – 'internal' (default) or 'ai'.
 		add_option( 'fpp_interlinking_analysis_engine', 'internal', '', false );
+
+		// v4.0.0: Ollama base URL.
+		add_option( 'fpp_interlinking_ai_base_url', 'http://localhost:11434', '', false );
 
 		// v3.0.0: Analytics settings.
 		add_option( 'fpp_interlinking_enable_tracking', 1, '', true );

@@ -61,6 +61,10 @@ class FPP_Interlinking_Admin {
 		// v3.0.0: Dashboard and analytics data.
 		add_action( 'wp_ajax_fpp_interlinking_load_dashboard', array( $this, 'ajax_load_dashboard' ) );
 		add_action( 'wp_ajax_fpp_interlinking_load_analytics', array( $this, 'ajax_load_analytics' ) );
+
+		// v4.0.0: AJAX tab loading and analytics CSV export.
+		add_action( 'wp_ajax_fpp_interlinking_load_tab', array( $this, 'ajax_load_tab' ) );
+		add_action( 'wp_ajax_fpp_interlinking_export_analytics_csv', array( $this, 'ajax_export_analytics_csv' ) );
 	}
 
 	/**
@@ -98,9 +102,17 @@ class FPP_Interlinking_Admin {
 		);
 
 		wp_enqueue_script(
+			'fpp-chartjs',
+			FPP_INTERLINKING_PLUGIN_URL . 'assets/js/chart.min.js',
+			array(),
+			'4.4.7',
+			true
+		);
+
+		wp_enqueue_script(
 			'fpp-interlinking-admin',
 			FPP_INTERLINKING_PLUGIN_URL . 'assets/js/fpp-interlinking-admin.js',
-			array( 'jquery' ),
+			array( 'jquery', 'fpp-chartjs' ),
 			FPP_INTERLINKING_VERSION,
 			true
 		);
@@ -186,6 +198,18 @@ class FPP_Interlinking_Admin {
 				'url'                    => esc_html__( 'URL', 'fpp-interlinking' ),
 				'date'                   => esc_html__( 'Date', 'fpp-interlinking' ),
 				'save_all_settings'      => esc_html__( 'Save All Settings', 'fpp-interlinking' ),
+				// v4.0.0 additions.
+				'impressions'            => esc_html__( 'Impressions', 'fpp-interlinking' ),
+				'ctr'                    => esc_html__( 'CTR', 'fpp-interlinking' ),
+				'vs_previous'            => esc_html__( 'vs previous period', 'fpp-interlinking' ),
+				'no_impressions_yet'     => esc_html__( 'No impression data yet. Impressions are tracked when pages with interlinks are viewed.', 'fpp-interlinking' ),
+				'export_analytics'       => esc_html__( 'Export CSV', 'fpp-interlinking' ),
+				'top_links'              => esc_html__( 'Top Links', 'fpp-interlinking' ),
+				'post_type'              => esc_html__( 'Post Type', 'fpp-interlinking' ),
+				'no_keywords_empty'      => esc_html__( 'No keywords yet. Add your first keyword mapping to start building interlinks.', 'fpp-interlinking' ),
+				'no_analytics_empty'     => esc_html__( 'No click data yet. Links will be tracked automatically once visitors start clicking.', 'fpp-interlinking' ),
+				'no_recent_empty'        => esc_html__( 'No recent clicks. Activity will appear here as visitors interact with your interlinks.', 'fpp-interlinking' ),
+				'run_analysis_empty'     => esc_html__( 'Run an analysis to discover keyword opportunities and interlinking gaps.', 'fpp-interlinking' ),
 			),
 		) );
 	}
@@ -249,19 +273,25 @@ class FPP_Interlinking_Admin {
 		?>
 		<div id="fpp-dashboard">
 			<div class="fpp-stat-cards" id="fpp-dashboard-cards">
-				<div class="fpp-stat-card">
+				<div class="fpp-stat-card fpp-card-blue">
+					<span class="fpp-stat-icon dashicons dashicons-tag" aria-hidden="true"></span>
 					<span class="fpp-stat-value" id="fpp-dash-total-keywords">—</span>
 					<span class="fpp-stat-label"><?php esc_html_e( 'Total Keywords', 'fpp-interlinking' ); ?></span>
+					<canvas class="fpp-sparkline" id="fpp-spark-keywords" width="60" height="24"></canvas>
 				</div>
-				<div class="fpp-stat-card">
+				<div class="fpp-stat-card fpp-card-green">
+					<span class="fpp-stat-icon dashicons dashicons-yes-alt" aria-hidden="true"></span>
 					<span class="fpp-stat-value" id="fpp-dash-active-keywords">—</span>
 					<span class="fpp-stat-label"><?php esc_html_e( 'Active Keywords', 'fpp-interlinking' ); ?></span>
 				</div>
-				<div class="fpp-stat-card">
+				<div class="fpp-stat-card fpp-card-orange">
+					<span class="fpp-stat-icon dashicons dashicons-chart-line" aria-hidden="true"></span>
 					<span class="fpp-stat-value" id="fpp-dash-clicks-30d">—</span>
 					<span class="fpp-stat-label"><?php esc_html_e( 'Clicks (30 days)', 'fpp-interlinking' ); ?></span>
+					<canvas class="fpp-sparkline" id="fpp-spark-clicks" width="60" height="24"></canvas>
 				</div>
-				<div class="fpp-stat-card">
+				<div class="fpp-stat-card fpp-card-purple">
+					<span class="fpp-stat-icon dashicons dashicons-networking" aria-hidden="true"></span>
 					<span class="fpp-stat-value" id="fpp-dash-coverage">—</span>
 					<span class="fpp-stat-label"><?php esc_html_e( 'Coverage', 'fpp-interlinking' ); ?></span>
 				</div>
@@ -638,27 +668,49 @@ class FPP_Interlinking_Admin {
 	private function render_tab_analytics() {
 		?>
 		<div id="fpp-analytics">
-			<div class="fpp-period-selector">
-				<button type="button" class="button fpp-period-btn" data-period="today"><?php esc_html_e( 'Today', 'fpp-interlinking' ); ?></button>
-				<button type="button" class="button fpp-period-btn" data-period="7d"><?php esc_html_e( '7 Days', 'fpp-interlinking' ); ?></button>
-				<button type="button" class="button fpp-period-btn active" data-period="30d"><?php esc_html_e( '30 Days', 'fpp-interlinking' ); ?></button>
-				<button type="button" class="button fpp-period-btn" data-period="all"><?php esc_html_e( 'All Time', 'fpp-interlinking' ); ?></button>
+			<div class="fpp-analytics-toolbar">
+				<div class="fpp-period-selector">
+					<button type="button" class="button fpp-period-btn" data-period="today"><?php esc_html_e( 'Today', 'fpp-interlinking' ); ?></button>
+					<button type="button" class="button fpp-period-btn" data-period="7d"><?php esc_html_e( '7 Days', 'fpp-interlinking' ); ?></button>
+					<button type="button" class="button fpp-period-btn active" data-period="30d"><?php esc_html_e( '30 Days', 'fpp-interlinking' ); ?></button>
+					<button type="button" class="button fpp-period-btn" data-period="all"><?php esc_html_e( 'All Time', 'fpp-interlinking' ); ?></button>
+					<button type="button" class="button fpp-period-btn" data-period="custom"><?php esc_html_e( 'Custom', 'fpp-interlinking' ); ?></button>
+				</div>
+				<div class="fpp-custom-date-range" id="fpp-custom-date-range" style="display:none;">
+					<input type="date" id="fpp-date-start" class="fpp-date-input" />
+					<span class="fpp-date-sep">&ndash;</span>
+					<input type="date" id="fpp-date-end" class="fpp-date-input" />
+					<button type="button" id="fpp-apply-custom-date" class="button button-small"><?php esc_html_e( 'Apply', 'fpp-interlinking' ); ?></button>
+				</div>
+				<div class="fpp-analytics-actions">
+					<button type="button" id="fpp-export-analytics-csv" class="button">
+						<span class="dashicons dashicons-download" aria-hidden="true"></span>
+						<?php esc_html_e( 'Export CSV', 'fpp-interlinking' ); ?>
+					</button>
+				</div>
 			</div>
 
 			<div class="fpp-stat-cards" id="fpp-analytics-cards">
-				<div class="fpp-stat-card">
+				<div class="fpp-stat-card fpp-card-blue">
+					<span class="fpp-stat-icon dashicons dashicons-admin-links" aria-hidden="true"></span>
 					<span class="fpp-stat-value" id="fpp-analytics-total-clicks">—</span>
 					<span class="fpp-stat-label"><?php esc_html_e( 'Total Clicks', 'fpp-interlinking' ); ?></span>
+					<span class="fpp-comparison-badge" id="fpp-cmp-clicks"></span>
 				</div>
-				<div class="fpp-stat-card">
-					<span class="fpp-stat-value" id="fpp-analytics-unique-keywords">—</span>
-					<span class="fpp-stat-label"><?php esc_html_e( 'Unique Keywords', 'fpp-interlinking' ); ?></span>
+				<div class="fpp-stat-card fpp-card-green">
+					<span class="fpp-stat-icon dashicons dashicons-visibility" aria-hidden="true"></span>
+					<span class="fpp-stat-value" id="fpp-analytics-impressions">—</span>
+					<span class="fpp-stat-label"><?php esc_html_e( 'Impressions', 'fpp-interlinking' ); ?></span>
+					<span class="fpp-comparison-badge" id="fpp-cmp-impressions"></span>
 				</div>
-				<div class="fpp-stat-card">
-					<span class="fpp-stat-value" id="fpp-analytics-avg-clicks">—</span>
-					<span class="fpp-stat-label"><?php esc_html_e( 'Avg Clicks/Keyword', 'fpp-interlinking' ); ?></span>
+				<div class="fpp-stat-card fpp-card-orange">
+					<span class="fpp-stat-icon dashicons dashicons-performance" aria-hidden="true"></span>
+					<span class="fpp-stat-value" id="fpp-analytics-ctr">—</span>
+					<span class="fpp-stat-label"><?php esc_html_e( 'CTR', 'fpp-interlinking' ); ?></span>
+					<span class="fpp-comparison-badge" id="fpp-cmp-ctr"></span>
 				</div>
-				<div class="fpp-stat-card">
+				<div class="fpp-stat-card fpp-card-purple">
+					<span class="fpp-stat-icon dashicons dashicons-star-filled" aria-hidden="true"></span>
 					<span class="fpp-stat-value" id="fpp-analytics-top-keyword">—</span>
 					<span class="fpp-stat-label"><?php esc_html_e( 'Top Keyword', 'fpp-interlinking' ); ?></span>
 				</div>
@@ -666,7 +718,9 @@ class FPP_Interlinking_Admin {
 
 			<div id="fpp-analytics-trend" class="fpp-analytics-section">
 				<h3><?php esc_html_e( 'Click Trend', 'fpp-interlinking' ); ?></h3>
-				<div id="fpp-trend-chart"></div>
+				<div class="fpp-chart-container">
+					<canvas id="fpp-trend-chart"></canvas>
+				</div>
 			</div>
 
 			<div id="fpp-analytics-tables" class="fpp-analytics-section">
@@ -674,16 +728,39 @@ class FPP_Interlinking_Admin {
 					<div>
 						<h3><?php esc_html_e( 'Top Keywords', 'fpp-interlinking' ); ?></h3>
 						<div id="fpp-analytics-top-keywords">
-							<p><span class="spinner is-active" style="float:none;"></span> <?php esc_html_e( 'Loading...', 'fpp-interlinking' ); ?></p>
+							<div class="fpp-skeleton fpp-skeleton-table"></div>
 						</div>
 					</div>
 					<div>
 						<h3><?php esc_html_e( 'Clicks by Post', 'fpp-interlinking' ); ?></h3>
 						<div id="fpp-analytics-clicks-by-post">
-							<p><span class="spinner is-active" style="float:none;"></span> <?php esc_html_e( 'Loading...', 'fpp-interlinking' ); ?></p>
+							<div class="fpp-skeleton fpp-skeleton-table"></div>
 						</div>
 					</div>
 				</div>
+			</div>
+
+			<div id="fpp-analytics-extra" class="fpp-analytics-section">
+				<div class="fpp-analytics-grid">
+					<div>
+						<h3><?php esc_html_e( 'Top Links', 'fpp-interlinking' ); ?></h3>
+						<div id="fpp-analytics-top-links">
+							<div class="fpp-skeleton fpp-skeleton-table"></div>
+						</div>
+					</div>
+					<div>
+						<h3><?php esc_html_e( 'Clicks by Post Type', 'fpp-interlinking' ); ?></h3>
+						<div class="fpp-chart-container fpp-chart-small">
+							<canvas id="fpp-post-type-chart"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="fpp-analytics-empty" class="fpp-empty-state" style="display:none;">
+				<span class="dashicons dashicons-chart-area fpp-empty-icon" aria-hidden="true"></span>
+				<h3><?php esc_html_e( 'No analytics data yet', 'fpp-interlinking' ); ?></h3>
+				<p><?php esc_html_e( 'Click data will appear here once visitors start clicking your interlinks.', 'fpp-interlinking' ); ?></p>
 			</div>
 		</div>
 		<?php
@@ -802,7 +879,7 @@ class FPP_Interlinking_Admin {
 				<label>
 					<input type="radio" name="fpp_analysis_engine" value="ai" <?php checked( $engine, 'ai' ); ?> />
 					<strong><?php esc_html_e( 'AI-Powered', 'fpp-interlinking' ); ?></strong>
-					— <?php esc_html_e( 'Uses OpenAI or Anthropic API. Better accuracy but requires API key and costs tokens.', 'fpp-interlinking' ); ?>
+					— <?php esc_html_e( 'Uses your AI provider (OpenAI, Anthropic, Gemini, Mistral, DeepSeek, or Ollama). Better accuracy but may require API key.', 'fpp-interlinking' ); ?>
 				</label>
 			</fieldset>
 		</div>
@@ -817,12 +894,20 @@ class FPP_Interlinking_Admin {
 					<th><label for="fpp-ai-provider"><?php esc_html_e( 'AI Provider', 'fpp-interlinking' ); ?></label></th>
 					<td>
 						<select id="fpp-ai-provider">
-							<option value="openai" <?php selected( FPP_Interlinking_AI::get_provider(), 'openai' ); ?>><?php esc_html_e( 'OpenAI', 'fpp-interlinking' ); ?></option>
-							<option value="anthropic" <?php selected( FPP_Interlinking_AI::get_provider(), 'anthropic' ); ?>><?php esc_html_e( 'Anthropic (Claude)', 'fpp-interlinking' ); ?></option>
+							<?php
+							$current_provider = FPP_Interlinking_AI::get_provider();
+							foreach ( FPP_Interlinking_AI::PROVIDER_INFO as $key => $info ) :
+							?>
+								<option value="<?php echo esc_attr( $key ); ?>"
+									data-requires-key="<?php echo $info['requires_key'] ? '1' : '0'; ?>"
+									<?php selected( $current_provider, $key ); ?>>
+									<?php echo esc_html( $info['label'] ); ?>
+								</option>
+							<?php endforeach; ?>
 						</select>
 					</td>
 				</tr>
-				<tr>
+				<tr id="fpp-ai-api-key-row" style="<?php echo 'ollama' === $current_provider ? 'display:none;' : ''; ?>">
 					<th><label for="fpp-ai-api-key"><?php esc_html_e( 'API Key', 'fpp-interlinking' ); ?></label></th>
 					<td>
 						<?php $masked = FPP_Interlinking_AI::get_masked_key(); ?>
@@ -836,13 +921,31 @@ class FPP_Interlinking_Admin {
 						<?php endif; ?>
 					</td>
 				</tr>
+				<tr id="fpp-ai-base-url-row" style="<?php echo 'ollama' !== $current_provider ? 'display:none;' : ''; ?>">
+					<th><label for="fpp-ai-base-url"><?php esc_html_e( 'Base URL', 'fpp-interlinking' ); ?></label></th>
+					<td>
+						<input type="url" id="fpp-ai-base-url" class="regular-text"
+							value="<?php echo esc_attr( FPP_Interlinking_AI::get_base_url() ); ?>"
+							placeholder="http://localhost:11434" />
+						<p class="description"><?php esc_html_e( 'Ollama server URL. Default: http://localhost:11434', 'fpp-interlinking' ); ?></p>
+					</td>
+				</tr>
 				<tr>
 					<th><label for="fpp-ai-model"><?php esc_html_e( 'Model', 'fpp-interlinking' ); ?></label></th>
 					<td>
 						<input type="text" id="fpp-ai-model" class="regular-text"
 							value="<?php echo esc_attr( FPP_Interlinking_AI::get_model() ); ?>"
 							placeholder="gpt-4o-mini" />
-						<p class="description"><?php esc_html_e( 'OpenAI: gpt-4o-mini, gpt-4o. Anthropic: claude-sonnet-4-20250514, claude-haiku-4-5-20251001.', 'fpp-interlinking' ); ?></p>
+						<p class="description" id="fpp-ai-model-desc">
+							<?php
+							$model_hints = array();
+							foreach ( FPP_Interlinking_AI::PROVIDER_INFO as $key => $info ) {
+								$models = implode( ', ', $info['models'] );
+								$model_hints[] = $info['label'] . ': ' . $models;
+							}
+							echo esc_html( implode( '. ', $model_hints ) . '.' );
+							?>
+						</p>
 					</td>
 				</tr>
 				<tr>
@@ -1134,7 +1237,7 @@ class FPP_Interlinking_Admin {
 		// AI settings (if provided).
 		if ( isset( $_POST['ai_provider'] ) ) {
 			$provider = sanitize_text_field( wp_unslash( $_POST['ai_provider'] ) );
-			if ( in_array( $provider, array( 'openai', 'anthropic' ), true ) ) {
+			if ( array_key_exists( $provider, FPP_Interlinking_AI::PROVIDER_INFO ) ) {
 				update_option( FPP_Interlinking_AI::OPTION_PROVIDER, $provider, false );
 			}
 		}
@@ -1150,6 +1253,14 @@ class FPP_Interlinking_Admin {
 
 		if ( ! empty( $_POST['ai_api_key'] ) ) {
 			FPP_Interlinking_AI::save_api_key( sanitize_text_field( wp_unslash( $_POST['ai_api_key'] ) ) );
+		}
+
+		// v4.0.0: Ollama base URL.
+		if ( isset( $_POST['ai_base_url'] ) ) {
+			$base_url = esc_url_raw( wp_unslash( $_POST['ai_base_url'] ) );
+			if ( ! empty( $base_url ) ) {
+				update_option( FPP_Interlinking_AI::OPTION_BASE_URL, $base_url, false );
+			}
 		}
 
 		delete_transient( 'fpp_interlinking_keywords_cache' );
@@ -1333,7 +1444,7 @@ class FPP_Interlinking_Admin {
 		$api_key    = isset( $_POST['api_key'] ) ? sanitize_text_field( wp_unslash( $_POST['api_key'] ) ) : '';
 		$max_tokens = isset( $_POST['max_tokens'] ) ? absint( $_POST['max_tokens'] ) : 2000;
 
-		if ( ! in_array( $provider, array( 'openai', 'anthropic' ), true ) ) {
+		if ( ! array_key_exists( $provider, FPP_Interlinking_AI::PROVIDER_INFO ) ) {
 			$provider = 'openai';
 		}
 
@@ -1348,6 +1459,14 @@ class FPP_Interlinking_Admin {
 
 		if ( ! empty( $api_key ) ) {
 			FPP_Interlinking_AI::save_api_key( $api_key );
+		}
+
+		// v4.0.0: Ollama base URL.
+		if ( isset( $_POST['base_url'] ) ) {
+			$base_url = esc_url_raw( wp_unslash( $_POST['base_url'] ) );
+			if ( ! empty( $base_url ) ) {
+				update_option( FPP_Interlinking_AI::OPTION_BASE_URL, $base_url, false );
+			}
 		}
 
 		wp_send_json_success( array(
@@ -1998,11 +2117,13 @@ class FPP_Interlinking_Admin {
 		$coverage  = $analytics->get_coverage_stats();
 		$summary   = $analytics->get_summary_stats( '30d' );
 		$recent    = $analytics->get_recent_clicks( 10 );
+		$trend_7d  = $analytics->get_daily_trend( 7 );
 
 		wp_send_json_success( array(
-			'coverage' => $coverage,
-			'summary'  => $summary,
-			'recent'   => $recent,
+			'coverage'  => $coverage,
+			'summary'   => $summary,
+			'recent'    => $recent,
+			'trend_7d'  => $trend_7d,
 		) );
 	}
 
@@ -2019,8 +2140,19 @@ class FPP_Interlinking_Admin {
 		}
 
 		$period = isset( $_POST['period'] ) ? sanitize_text_field( wp_unslash( $_POST['period'] ) ) : '30d';
-		if ( ! in_array( $period, array( 'today', '7d', '30d', 'all' ), true ) ) {
+		if ( ! in_array( $period, array( 'today', '7d', '30d', 'all', 'custom' ), true ) ) {
 			$period = '30d';
+		}
+
+		// v4.0.0: Custom date range support.
+		$start_date = '';
+		$end_date   = '';
+		if ( 'custom' === $period ) {
+			$start_date = isset( $_POST['start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['start_date'] ) ) : '';
+			$end_date   = isset( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) ) : '';
+			if ( empty( $start_date ) || empty( $end_date ) ) {
+				$period = '30d';
+			}
 		}
 
 		// Determine trend days from period.
@@ -2030,16 +2162,90 @@ class FPP_Interlinking_Admin {
 			'30d'   => 30,
 			'all'   => 90,
 		);
-		$trend_days = $trend_map[ $period ];
+		if ( 'custom' === $period && $start_date && $end_date ) {
+			$diff       = abs( strtotime( $end_date ) - strtotime( $start_date ) );
+			$trend_days = max( 1, (int) ceil( $diff / DAY_IN_SECONDS ) + 1 );
+		} else {
+			$trend_days = isset( $trend_map[ $period ] ) ? $trend_map[ $period ] : 30;
+		}
 
 		$analytics = new FPP_Interlinking_Analytics();
 
 		wp_send_json_success( array(
-			'summary'        => $analytics->get_summary_stats( $period ),
-			'top_keywords'   => $analytics->get_top_keywords( 10, $period ),
-			'clicks_by_post' => $analytics->get_clicks_by_post( 10, $period ),
-			'daily_trend'    => $analytics->get_daily_trend( $trend_days ),
-			'period'         => $period,
+			'summary'         => $analytics->get_summary_stats( $period, $start_date, $end_date ),
+			'comparison'      => $analytics->get_comparison_stats( $period, $start_date, $end_date ),
+			'top_keywords'    => $analytics->get_top_keywords( 10, $period, $start_date, $end_date ),
+			'clicks_by_post'  => $analytics->get_clicks_by_post( 10, $period, $start_date, $end_date ),
+			'top_links'       => $analytics->get_top_links( 10, $period, $start_date, $end_date ),
+			'post_type_stats' => $analytics->get_stats_by_post_type( $period, $start_date, $end_date ),
+			'daily_trend'     => $analytics->get_daily_trend( $trend_days, $start_date ),
+			'period'          => $period,
+		) );
+	}
+
+	/* ── v4.0.0: AJAX Tab Loading & Analytics CSV Export ────────────── */
+
+	/**
+	 * AJAX: Load a tab's HTML via AJAX for seamless tab switching.
+	 *
+	 * @since 4.0.0
+	 */
+	public function ajax_load_tab() {
+		check_ajax_referer( 'fpp_interlinking_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'fpp-interlinking' ) ) );
+		}
+
+		$tab    = isset( $_POST['tab'] ) ? sanitize_key( $_POST['tab'] ) : '';
+		$method = 'render_tab_' . $tab;
+
+		if ( empty( $tab ) || ! method_exists( $this, $method ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid tab.', 'fpp-interlinking' ) ) );
+		}
+
+		ob_start();
+		$this->$method();
+		$html = ob_get_clean();
+
+		wp_send_json_success( array(
+			'html' => $html,
+			'tab'  => $tab,
+		) );
+	}
+
+	/**
+	 * AJAX: Export analytics data as CSV.
+	 *
+	 * @since 4.0.0
+	 */
+	public function ajax_export_analytics_csv() {
+		check_ajax_referer( 'fpp_interlinking_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'fpp-interlinking' ) ) );
+		}
+
+		$type   = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : 'top_keywords';
+		$period = isset( $_POST['period'] ) ? sanitize_text_field( wp_unslash( $_POST['period'] ) ) : '30d';
+
+		$start_date = '';
+		$end_date   = '';
+		if ( 'custom' === $period ) {
+			$start_date = isset( $_POST['start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['start_date'] ) ) : '';
+			$end_date   = isset( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) ) : '';
+		}
+
+		$analytics = new FPP_Interlinking_Analytics();
+		$csv       = $analytics->build_csv( $type, $period, $start_date, $end_date );
+
+		if ( empty( $csv ) ) {
+			wp_send_json_error( array( 'message' => __( 'No data to export.', 'fpp-interlinking' ) ) );
+		}
+
+		wp_send_json_success( array(
+			'csv'      => $csv,
+			'filename' => 'wp-interlinking-' . $type . '-' . gmdate( 'Y-m-d' ) . '.csv',
 		) );
 	}
 }

@@ -1,10 +1,14 @@
-# Copyright (C) 2024 FPP
-# This file is distributed under the GPL-2.0-or-later.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the WP Interlinking package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Interlinking 3.0.0\n"
-"Report-Msgid-Bugs-To: https://developer.wordpress.org/plugins/\n"
-"POT-Creation-Date: 2026-02-26 02:14+0100\n"
+"Project-Id-Version: WP Interlinking 4.0.0\n"
+"Report-Msgid-Bugs-To: https://example.com\n"
+"POT-Creation-Date: 2026-03-01 23:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,1011 +17,1085 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: fpp-interlinking.php:82 includes/class-fpp-interlinking-admin.php:206
+#: fpp-interlinking.php:82 includes/class-fpp-interlinking-admin.php:230
 msgid "Settings"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:73
-#: includes/class-fpp-interlinking-admin.php:74
+#: includes/class-fpp-interlinking-admin.php:77
+#: includes/class-fpp-interlinking-admin.php:78
 msgid "WP Interlinking"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:115
+#: includes/class-fpp-interlinking-admin.php:127
 msgid "Are you sure you want to delete this keyword mapping?"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:116
+#: includes/class-fpp-interlinking-admin.php:128
 msgid "Keyword and Target URL are required."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:117
+#: includes/class-fpp-interlinking-admin.php:129
 msgid "Request failed. Please try again."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:118
+#: includes/class-fpp-interlinking-admin.php:130
 #, php-format
 msgid "Found %d matching posts/pages:"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:119
+#: includes/class-fpp-interlinking-admin.php:131
 msgid "No posts or pages found matching this keyword."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:120
+#: includes/class-fpp-interlinking-admin.php:132
 msgid "Use this URL"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:121
+#: includes/class-fpp-interlinking-admin.php:133
 msgid "Updating..."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:122
+#: includes/class-fpp-interlinking-admin.php:134
 msgid "Close"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:123
+#: includes/class-fpp-interlinking-admin.php:135
 msgid "Scanning..."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:124
-#: includes/class-fpp-interlinking-admin.php:435
+#: includes/class-fpp-interlinking-admin.php:136
+#: includes/class-fpp-interlinking-admin.php:465
 msgid "Scan Post Titles"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:125
+#: includes/class-fpp-interlinking-admin.php:137
 msgid "No published posts or pages found."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:126
+#: includes/class-fpp-interlinking-admin.php:138
 msgid "Already mapped"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:127
+#: includes/class-fpp-interlinking-admin.php:139
 msgid "Available"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:128
+#: includes/class-fpp-interlinking-admin.php:140
 msgid "Add as Keyword"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:129
+#: includes/class-fpp-interlinking-admin.php:141
 #, php-format
 msgid "Page %1$d of %2$d (%3$d total)"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:130
+#: includes/class-fpp-interlinking-admin.php:142
 msgid "No posts found."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:131
+#: includes/class-fpp-interlinking-admin.php:143
 msgid "Processing..."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:132
-#: includes/class-fpp-interlinking-admin.php:487
-#: includes/class-fpp-interlinking-admin.php:503
+#: includes/class-fpp-interlinking-admin.php:144
+#: includes/class-fpp-interlinking-admin.php:517
+#: includes/class-fpp-interlinking-admin.php:533
 msgid "Extract Keywords"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:133
-#: includes/class-fpp-interlinking-admin.php:537
+#: includes/class-fpp-interlinking-admin.php:145
+#: includes/class-fpp-interlinking-admin.php:567
 msgid "Score Relevance"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:134
+#: includes/class-fpp-interlinking-admin.php:146
 msgid "Analyse Gaps"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:135
+#: includes/class-fpp-interlinking-admin.php:147
 msgid "Auto-Generate"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:136
+#: includes/class-fpp-interlinking-admin.php:148
 msgid "No results found. Try again with different content."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:137
+#: includes/class-fpp-interlinking-admin.php:149
 msgid "Add Mapping"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:138
+#: includes/class-fpp-interlinking-admin.php:150
 msgid "Add All"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:139
+#: includes/class-fpp-interlinking-admin.php:151
 msgid "Added!"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:140
+#: includes/class-fpp-interlinking-admin.php:152
 msgid "Connection successful!"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:141
+#: includes/class-fpp-interlinking-admin.php:153
 msgid "Select a post to analyse"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:142
+#: includes/class-fpp-interlinking-admin.php:154
 msgid "Enter a keyword first"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:143
+#: includes/class-fpp-interlinking-admin.php:155
 #, php-format
 msgid "Analysed %1$d of %2$d posts"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:144
-#: includes/class-fpp-interlinking-admin.php:582
-#: includes/class-fpp-interlinking-admin.php:621
+#: includes/class-fpp-interlinking-admin.php:156
+#: includes/class-fpp-interlinking-admin.php:612
+#: includes/class-fpp-interlinking-admin.php:651
 msgid "Confidence"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:145
-#: includes/class-fpp-interlinking-admin.php:511
+#: includes/class-fpp-interlinking-admin.php:157
+#: includes/class-fpp-interlinking-admin.php:541
 msgid "Relevance"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:146
+#: includes/class-fpp-interlinking-admin.php:158
 msgid "No content gaps found — your interlinking looks good!"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:147
+#: includes/class-fpp-interlinking-admin.php:159
 #, php-format
 msgid "Added %d keyword mappings."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:148
+#: includes/class-fpp-interlinking-admin.php:160
 msgid "Saving..."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:149
+#: includes/class-fpp-interlinking-admin.php:161
 msgid "Adding..."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:150
+#: includes/class-fpp-interlinking-admin.php:162
 msgid "Adding all..."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:151
-#: includes/class-fpp-interlinking-admin.php:274
-#: includes/class-fpp-interlinking-admin.php:355
+#: includes/class-fpp-interlinking-admin.php:163
+#: includes/class-fpp-interlinking-admin.php:304
+#: includes/class-fpp-interlinking-admin.php:385
 msgid "Add Keyword"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:152
-#: includes/class-fpp-interlinking-admin.php:356
+#: includes/class-fpp-interlinking-admin.php:164
+#: includes/class-fpp-interlinking-admin.php:386
 msgid "Update Keyword"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:153
+#: includes/class-fpp-interlinking-admin.php:165
 msgid "Save Settings"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:154
+#: includes/class-fpp-interlinking-admin.php:166
 msgid "Save AI Settings"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:155
+#: includes/class-fpp-interlinking-admin.php:167
 msgid "Please enter a valid URL starting with http:// or https://."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:156
-#: includes/class-fpp-interlinking-admin.php:320
+#: includes/class-fpp-interlinking-admin.php:168
+#: includes/class-fpp-interlinking-admin.php:350
 msgid "Add New Keyword Mapping"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:157
+#: includes/class-fpp-interlinking-admin.php:169
 msgid "Edit Keyword Mapping"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:158
-#: includes/class-fpp-interlinking-admin.php:404
+#: includes/class-fpp-interlinking-admin.php:170
+#: includes/class-fpp-interlinking-admin.php:434
 msgid "Active"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:159
+#: includes/class-fpp-interlinking-admin.php:171
 msgid "Inactive"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:160
-#: includes/class-fpp-interlinking-admin.php:372
+#: includes/class-fpp-interlinking-admin.php:172
+#: includes/class-fpp-interlinking-admin.php:402
 msgid "Disable"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:161
-#: includes/class-fpp-interlinking-admin.php:371
+#: includes/class-fpp-interlinking-admin.php:173
+#: includes/class-fpp-interlinking-admin.php:401
 msgid "Enable"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:162
+#: includes/class-fpp-interlinking-admin.php:174
 msgid "Please select a bulk action."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:163
+#: includes/class-fpp-interlinking-admin.php:175
 msgid "Please select at least one keyword."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:164
+#: includes/class-fpp-interlinking-admin.php:176
 msgid "Are you sure you want to delete the selected keywords?"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:165
+#: includes/class-fpp-interlinking-admin.php:177
 msgid "Bulk action completed successfully."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:166
-#: includes/class-fpp-interlinking-admin.php:1689
+#: includes/class-fpp-interlinking-admin.php:178
+#: includes/class-fpp-interlinking-admin.php:1808
 msgid "No keywords to export."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:167
+#: includes/class-fpp-interlinking-admin.php:179
 msgid "Please select a CSV file to import."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:168
+#: includes/class-fpp-interlinking-admin.php:180
 #, php-format
 msgid "Import complete: %1$d imported, %2$d skipped, %3$d errors."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:169
+#: includes/class-fpp-interlinking-admin.php:181
 msgid "Importing..."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:170
-#: includes/class-fpp-interlinking-admin.php:289
-#: includes/class-fpp-interlinking-admin.php:409
-#: includes/class-fpp-interlinking-admin.php:677
-#: includes/class-fpp-interlinking-admin.php:683
+#: includes/class-fpp-interlinking-admin.php:182
+#: includes/class-fpp-interlinking-admin.php:319
+#: includes/class-fpp-interlinking-admin.php:439
 msgid "Loading..."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:171
+#: includes/class-fpp-interlinking-admin.php:183
 msgid "No keyword mappings found."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:172
+#: includes/class-fpp-interlinking-admin.php:184
 #, php-format
 msgid "Showing %1$d–%2$d of %3$d"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:174
+#: includes/class-fpp-interlinking-admin.php:186
 msgid "No data available yet."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:175
-#: includes/class-fpp-interlinking-admin.php:651
+#: includes/class-fpp-interlinking-admin.php:187
+#: includes/class-fpp-interlinking-admin.php:697
 msgid "Total Clicks"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:176
+#: includes/class-fpp-interlinking-admin.php:188
 msgid "Unique Keywords Clicked"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:177
-#: includes/class-fpp-interlinking-admin.php:659
+#: includes/class-fpp-interlinking-admin.php:189
 msgid "Avg Clicks/Keyword"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:178
-#: includes/class-fpp-interlinking-admin.php:663
+#: includes/class-fpp-interlinking-admin.php:190
+#: includes/class-fpp-interlinking-admin.php:715
 msgid "Top Keyword"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:179
-#: includes/class-fpp-interlinking-admin.php:266
+#: includes/class-fpp-interlinking-admin.php:191
+#: includes/class-fpp-interlinking-admin.php:296
 msgid "Coverage"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:180
-#: includes/class-fpp-interlinking-admin.php:471
-#: includes/class-fpp-interlinking-admin.php:799
+#: includes/class-fpp-interlinking-admin.php:192
+#: includes/class-fpp-interlinking-admin.php:501
+#: includes/class-fpp-interlinking-admin.php:876
 msgid "Internal Engine"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:181
-#: includes/class-fpp-interlinking-admin.php:471
+#: includes/class-fpp-interlinking-admin.php:193
+#: includes/class-fpp-interlinking-admin.php:501
 msgid "AI Engine"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:182
+#: includes/class-fpp-interlinking-admin.php:194
 msgid "No click data yet. Links will be tracked once visitors start clicking."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:183
+#: includes/class-fpp-interlinking-admin.php:195
 msgid "Clicks"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:184
-#: includes/class-fpp-interlinking-admin.php:324
-#: includes/class-fpp-interlinking-admin.php:399
-#: includes/class-fpp-interlinking-admin.php:510
-#: includes/class-fpp-interlinking-admin.php:579
-#: includes/class-fpp-interlinking-admin.php:618
+#: includes/class-fpp-interlinking-admin.php:196
+#: includes/class-fpp-interlinking-admin.php:354
+#: includes/class-fpp-interlinking-admin.php:429
+#: includes/class-fpp-interlinking-admin.php:540
+#: includes/class-fpp-interlinking-admin.php:609
+#: includes/class-fpp-interlinking-admin.php:648
 msgid "Keyword"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:185
+#: includes/class-fpp-interlinking-admin.php:197
 msgid "Post"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:186
-#: includes/class-fpp-interlinking-admin.php:444
-#: includes/class-fpp-interlinking-admin.php:545
+#: includes/class-fpp-interlinking-admin.php:198
+#: includes/class-fpp-interlinking-admin.php:474
+#: includes/class-fpp-interlinking-admin.php:575
 msgid "URL"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:187
+#: includes/class-fpp-interlinking-admin.php:199
 msgid "Date"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:188
-#: includes/class-fpp-interlinking-admin.php:897
+#: includes/class-fpp-interlinking-admin.php:200
+#: includes/class-fpp-interlinking-admin.php:1000
 msgid "Save All Settings"
 msgstr ""
 
 #: includes/class-fpp-interlinking-admin.php:202
-msgid "Dashboard"
+#: includes/class-fpp-interlinking-admin.php:703
+msgid "Impressions"
 msgstr ""
 
 #: includes/class-fpp-interlinking-admin.php:203
-msgid "Keywords"
+#: includes/class-fpp-interlinking-admin.php:709
+msgid "CTR"
 msgstr ""
 
 #: includes/class-fpp-interlinking-admin.php:204
-msgid "Analysis Tools"
+msgid "vs previous period"
 msgstr ""
 
 #: includes/class-fpp-interlinking-admin.php:205
+msgid ""
+"No impression data yet. Impressions are tracked when pages with interlinks "
+"are viewed."
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:206
+#: includes/class-fpp-interlinking-admin.php:410
+#: includes/class-fpp-interlinking-admin.php:688
+msgid "Export CSV"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:207
+#: includes/class-fpp-interlinking-admin.php:746
+msgid "Top Links"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:208
+msgid "Post Type"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:209
+msgid ""
+"No keywords yet. Add your first keyword mapping to start building interlinks."
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:210
+msgid ""
+"No click data yet. Links will be tracked automatically once visitors start "
+"clicking."
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:211
+msgid ""
+"No recent clicks. Activity will appear here as visitors interact with your "
+"interlinks."
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:212
+msgid ""
+"Run an analysis to discover keyword opportunities and interlinking gaps."
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:226
+msgid "Dashboard"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:227
+msgid "Keywords"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:228
+msgid "Analysis Tools"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:229
 msgid "Analytics"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:254
+#: includes/class-fpp-interlinking-admin.php:279
 msgid "Total Keywords"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:258
+#: includes/class-fpp-interlinking-admin.php:285
 msgid "Active Keywords"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:262
+#: includes/class-fpp-interlinking-admin.php:290
 msgid "Clicks (30 days)"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:271
+#: includes/class-fpp-interlinking-admin.php:301
 msgid "Quick Actions"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:278
+#: includes/class-fpp-interlinking-admin.php:308
 msgid "Run Analysis"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:282
+#: includes/class-fpp-interlinking-admin.php:312
 msgid "View Analytics"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:287
+#: includes/class-fpp-interlinking-admin.php:317
 msgid "Recent Click Activity"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:306
+#: includes/class-fpp-interlinking-admin.php:336
 msgid "Quick Add from Post Search"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:307
+#: includes/class-fpp-interlinking-admin.php:337
 msgid ""
 "Search for an existing post or page to auto-fill the keyword and URL fields "
 "below."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:310
+#: includes/class-fpp-interlinking-admin.php:340
 msgid "Type to search posts and pages..."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:325
+#: includes/class-fpp-interlinking-admin.php:355
 msgid "Enter keyword or phrase"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:328
-#: includes/class-fpp-interlinking-admin.php:400
-#: includes/class-fpp-interlinking-admin.php:619
+#: includes/class-fpp-interlinking-admin.php:358
+#: includes/class-fpp-interlinking-admin.php:430
+#: includes/class-fpp-interlinking-admin.php:649
 msgid "Target URL"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:332
+#: includes/class-fpp-interlinking-admin.php:362
 msgid "Per-mapping overrides"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:337
-#: includes/class-fpp-interlinking-admin.php:401
+#: includes/class-fpp-interlinking-admin.php:367
+#: includes/class-fpp-interlinking-admin.php:431
 msgid "Nofollow"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:342
-#: includes/class-fpp-interlinking-admin.php:733
+#: includes/class-fpp-interlinking-admin.php:372
+#: includes/class-fpp-interlinking-admin.php:810
 msgid "Open in new tab"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:346
+#: includes/class-fpp-interlinking-admin.php:376
 msgid "Max replacements:"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:349
+#: includes/class-fpp-interlinking-admin.php:379
 msgid "Set to 0 to use the global setting."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:357
+#: includes/class-fpp-interlinking-admin.php:387
 msgid "Cancel"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:365
+#: includes/class-fpp-interlinking-admin.php:395
 msgid "Keyword Mappings"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:370
+#: includes/class-fpp-interlinking-admin.php:400
 msgid "Bulk Actions"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:373
+#: includes/class-fpp-interlinking-admin.php:403
 msgid "Delete"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:375
+#: includes/class-fpp-interlinking-admin.php:405
+#: includes/class-fpp-interlinking-admin.php:683
 msgid "Apply"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:380
-msgid "Export CSV"
-msgstr ""
-
-#: includes/class-fpp-interlinking-admin.php:384
+#: includes/class-fpp-interlinking-admin.php:414
 msgid "Import CSV"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:390
+#: includes/class-fpp-interlinking-admin.php:420
 msgid "Search keywords..."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:394
+#: includes/class-fpp-interlinking-admin.php:424
 msgid "No keyword mappings found. Add your first one above."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:402
+#: includes/class-fpp-interlinking-admin.php:432
 msgid "New Tab"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:403
+#: includes/class-fpp-interlinking-admin.php:433
 msgid "Max"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:405
-#: includes/class-fpp-interlinking-admin.php:446
-#: includes/class-fpp-interlinking-admin.php:512
-#: includes/class-fpp-interlinking-admin.php:548
-#: includes/class-fpp-interlinking-admin.php:584
-#: includes/class-fpp-interlinking-admin.php:622
+#: includes/class-fpp-interlinking-admin.php:435
+#: includes/class-fpp-interlinking-admin.php:476
+#: includes/class-fpp-interlinking-admin.php:542
+#: includes/class-fpp-interlinking-admin.php:578
+#: includes/class-fpp-interlinking-admin.php:614
+#: includes/class-fpp-interlinking-admin.php:652
 msgid "Actions"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:415
-#: includes/class-fpp-interlinking-admin.php:454
+#: includes/class-fpp-interlinking-admin.php:445
+#: includes/class-fpp-interlinking-admin.php:484
 msgid "Previous"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:416
-#: includes/class-fpp-interlinking-admin.php:455
+#: includes/class-fpp-interlinking-admin.php:446
+#: includes/class-fpp-interlinking-admin.php:485
 msgid "Next"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:426
+#: includes/class-fpp-interlinking-admin.php:456
 msgid "Suggest Keywords from Content"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:431
+#: includes/class-fpp-interlinking-admin.php:461
 msgid ""
 "Scan your published posts and pages to discover potential keyword mappings "
 "based on their titles."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:442
+#: includes/class-fpp-interlinking-admin.php:472
 msgid "Post Title (Keyword)"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:443
+#: includes/class-fpp-interlinking-admin.php:473
 msgid "Type"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:445
+#: includes/class-fpp-interlinking-admin.php:475
 msgid "Status"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:476
+#: includes/class-fpp-interlinking-admin.php:506
 msgid ""
 "Analyse your content to discover keyword opportunities and interlinking gaps."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:491
+#: includes/class-fpp-interlinking-admin.php:521
 msgid ""
 "Select a post or page to analyse its content and extract SEO keywords for "
 "interlinking."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:495
+#: includes/class-fpp-interlinking-admin.php:525
 msgid "Search for a post to analyse..."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:527
+#: includes/class-fpp-interlinking-admin.php:557
 msgid "Relevance Scoring"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:531
+#: includes/class-fpp-interlinking-admin.php:561
 msgid "Enter a keyword to find and score the most relevant pages to link to."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:534
+#: includes/class-fpp-interlinking-admin.php:564
 msgid "Enter keyword to score..."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:544
+#: includes/class-fpp-interlinking-admin.php:574
 msgid "Page"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:546
+#: includes/class-fpp-interlinking-admin.php:576
 msgid "Score"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:547
-#: includes/class-fpp-interlinking-admin.php:583
+#: includes/class-fpp-interlinking-admin.php:577
+#: includes/class-fpp-interlinking-admin.php:613
 msgid "Reason"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:563
+#: includes/class-fpp-interlinking-admin.php:593
 msgid "Content Gap Analysis"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:567
+#: includes/class-fpp-interlinking-admin.php:597
 msgid ""
 "Analyse your published content to discover posts that should link to each "
 "other but currently don't."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:571
+#: includes/class-fpp-interlinking-admin.php:601
 msgid "Analyse Content Gaps"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:580
+#: includes/class-fpp-interlinking-admin.php:610
 msgid "Source Post"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:581
+#: includes/class-fpp-interlinking-admin.php:611
 msgid "Target Post"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:599
-#: includes/class-fpp-interlinking-admin.php:607
+#: includes/class-fpp-interlinking-admin.php:629
+#: includes/class-fpp-interlinking-admin.php:637
 msgid "Auto-Generate Mappings"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:603
+#: includes/class-fpp-interlinking-admin.php:633
 msgid ""
 "Scan your content and automatically propose keyword-to-URL mappings for a "
 "complete interlinking strategy."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:610
+#: includes/class-fpp-interlinking-admin.php:640
 msgid "Add All Mappings"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:620
+#: includes/class-fpp-interlinking-admin.php:650
 msgid "Target Page"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:642
+#: includes/class-fpp-interlinking-admin.php:673
 msgid "Today"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:643
+#: includes/class-fpp-interlinking-admin.php:674
 msgid "7 Days"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:644
+#: includes/class-fpp-interlinking-admin.php:675
 msgid "30 Days"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:645
+#: includes/class-fpp-interlinking-admin.php:676
 msgid "All Time"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:655
-msgid "Unique Keywords"
-msgstr ""
-
-#: includes/class-fpp-interlinking-admin.php:668
-msgid "Click Trend"
-msgstr ""
-
-#: includes/class-fpp-interlinking-admin.php:675
-msgid "Top Keywords"
-msgstr ""
-
-#: includes/class-fpp-interlinking-admin.php:681
-msgid "Clicks by Post"
-msgstr ""
-
-#: includes/class-fpp-interlinking-admin.php:714
-msgid "General Settings"
-msgstr ""
-
-#: includes/class-fpp-interlinking-admin.php:717
-msgid "Max replacements per keyword"
+#: includes/class-fpp-interlinking-admin.php:677
+msgid "Custom"
 msgstr ""
 
 #: includes/class-fpp-interlinking-admin.php:720
+msgid "Click Trend"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:729
+msgid "Top Keywords"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:735
+msgid "Clicks by Post"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:752
+msgid "Clicks by Post Type"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:762
+msgid "No analytics data yet"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:763
+msgid ""
+"Click data will appear here once visitors start clicking your interlinks."
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:791
+msgid "General Settings"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:794
+msgid "Max replacements per keyword"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:797
 msgid ""
 "Maximum number of times each keyword gets linked per post. Set to 1 to only "
 "link the first occurrence."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:724
+#: includes/class-fpp-interlinking-admin.php:801
 msgid "Add rel=\"nofollow\""
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:728
+#: includes/class-fpp-interlinking-admin.php:805
 msgid "Add nofollow attribute to generated links"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:737
+#: includes/class-fpp-interlinking-admin.php:814
 msgid "Open links in a new browser tab"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:742
+#: includes/class-fpp-interlinking-admin.php:819
 msgid "Case sensitive"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:746
+#: includes/class-fpp-interlinking-admin.php:823
 msgid "Match keywords with exact case"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:751
+#: includes/class-fpp-interlinking-admin.php:828
 msgid "Max links per post"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:754
+#: includes/class-fpp-interlinking-admin.php:831
 msgid ""
 "Maximum total auto-generated links per post/page. Set to 0 for unlimited."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:758
+#: includes/class-fpp-interlinking-admin.php:835
 msgid "Excluded posts/pages"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:761
+#: includes/class-fpp-interlinking-admin.php:838
 msgid ""
 "Comma-separated list of post/page IDs to exclude from keyword replacement."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:771
+#: includes/class-fpp-interlinking-admin.php:848
 msgid "Post Types"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:788
+#: includes/class-fpp-interlinking-admin.php:865
 msgid "Select which post types should have keyword replacement applied."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:795
+#: includes/class-fpp-interlinking-admin.php:872
 msgid "Analysis Engine"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:800
+#: includes/class-fpp-interlinking-admin.php:877
 msgid "Fast, free, uses PHP-based TF-IDF analysis. Recommended for most sites."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:804
+#: includes/class-fpp-interlinking-admin.php:881
 msgid "AI-Powered"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:805
+#: includes/class-fpp-interlinking-admin.php:882
 msgid ""
-"Uses OpenAI or Anthropic API. Better accuracy but requires API key and costs "
-"tokens."
+"Uses your AI provider (OpenAI, Anthropic, Gemini, Mistral, DeepSeek, or "
+"Ollama). Better accuracy but may require API key."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:814
+#: includes/class-fpp-interlinking-admin.php:891
 msgid "AI Configuration"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:817
+#: includes/class-fpp-interlinking-admin.php:894
 msgid "AI Provider"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:820
-msgid "OpenAI"
-msgstr ""
-
-#: includes/class-fpp-interlinking-admin.php:821
-msgid "Anthropic (Claude)"
-msgstr ""
-
-#: includes/class-fpp-interlinking-admin.php:826
+#: includes/class-fpp-interlinking-admin.php:911
 msgid "API Key"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:830
+#: includes/class-fpp-interlinking-admin.php:915
 msgid "Enter your API key"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:834
+#: includes/class-fpp-interlinking-admin.php:919
 #, php-format
 msgid "Current key: %s — Leave blank to keep existing key."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:840
+#: includes/class-fpp-interlinking-admin.php:925
+msgid "Base URL"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:930
+msgid "Ollama server URL. Default: http://localhost:11434"
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:934
 msgid "Model"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:845
-msgid ""
-"OpenAI: gpt-4o-mini, gpt-4o. Anthropic: claude-sonnet-4-20250514, claude-"
-"haiku-4-5-20251001."
-msgstr ""
-
-#: includes/class-fpp-interlinking-admin.php:849
+#: includes/class-fpp-interlinking-admin.php:952
 msgid "Max Tokens"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:857
+#: includes/class-fpp-interlinking-admin.php:960
 msgid "Test Connection"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:866
+#: includes/class-fpp-interlinking-admin.php:969
 msgid "Analytics Settings"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:869
+#: includes/class-fpp-interlinking-admin.php:972
 msgid "Click Tracking"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:873
+#: includes/class-fpp-interlinking-admin.php:976
 msgid "Track clicks on auto-generated interlinks"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:878
+#: includes/class-fpp-interlinking-admin.php:981
 msgid "Data Retention"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:881
+#: includes/class-fpp-interlinking-admin.php:984
 msgid "30 days"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:882
+#: includes/class-fpp-interlinking-admin.php:985
 msgid "60 days"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:883
+#: includes/class-fpp-interlinking-admin.php:986
 msgid "90 days"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:884
+#: includes/class-fpp-interlinking-admin.php:987
 msgid "180 days"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:885
+#: includes/class-fpp-interlinking-admin.php:988
 msgid "365 days"
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:887
+#: includes/class-fpp-interlinking-admin.php:990
 msgid "Automatically purge click data older than this."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:919
-#: includes/class-fpp-interlinking-admin.php:975
-#: includes/class-fpp-interlinking-admin.php:1032
-#: includes/class-fpp-interlinking-admin.php:1060
-#: includes/class-fpp-interlinking-admin.php:1094
-#: includes/class-fpp-interlinking-admin.php:1171
-#: includes/class-fpp-interlinking-admin.php:1219
-#: includes/class-fpp-interlinking-admin.php:1270
-#: includes/class-fpp-interlinking-admin.php:1328
-#: includes/class-fpp-interlinking-admin.php:1368
-#: includes/class-fpp-interlinking-admin.php:1389
-#: includes/class-fpp-interlinking-admin.php:1437
-#: includes/class-fpp-interlinking-admin.php:1500
-#: includes/class-fpp-interlinking-admin.php:1528
+#: includes/class-fpp-interlinking-admin.php:1022
+#: includes/class-fpp-interlinking-admin.php:1078
+#: includes/class-fpp-interlinking-admin.php:1135
+#: includes/class-fpp-interlinking-admin.php:1163
+#: includes/class-fpp-interlinking-admin.php:1197
+#: includes/class-fpp-interlinking-admin.php:1282
+#: includes/class-fpp-interlinking-admin.php:1330
+#: includes/class-fpp-interlinking-admin.php:1381
+#: includes/class-fpp-interlinking-admin.php:1439
+#: includes/class-fpp-interlinking-admin.php:1487
+#: includes/class-fpp-interlinking-admin.php:1508
 #: includes/class-fpp-interlinking-admin.php:1556
-#: includes/class-fpp-interlinking-admin.php:1608
-#: includes/class-fpp-interlinking-admin.php:1631
-#: includes/class-fpp-interlinking-admin.php:1683
-#: includes/class-fpp-interlinking-admin.php:1721
-#: includes/class-fpp-interlinking-admin.php:1797
-#: includes/class-fpp-interlinking-admin.php:1852
-#: includes/class-fpp-interlinking-admin.php:1924
-#: includes/class-fpp-interlinking-admin.php:1958
-#: includes/class-fpp-interlinking-admin.php:1994
-#: includes/class-fpp-interlinking-admin.php:2018
+#: includes/class-fpp-interlinking-admin.php:1619
+#: includes/class-fpp-interlinking-admin.php:1647
+#: includes/class-fpp-interlinking-admin.php:1675
+#: includes/class-fpp-interlinking-admin.php:1727
+#: includes/class-fpp-interlinking-admin.php:1750
+#: includes/class-fpp-interlinking-admin.php:1802
+#: includes/class-fpp-interlinking-admin.php:1840
+#: includes/class-fpp-interlinking-admin.php:1916
+#: includes/class-fpp-interlinking-admin.php:1971
+#: includes/class-fpp-interlinking-admin.php:2043
+#: includes/class-fpp-interlinking-admin.php:2077
+#: includes/class-fpp-interlinking-admin.php:2113
+#: includes/class-fpp-interlinking-admin.php:2139
+#: includes/class-fpp-interlinking-admin.php:2197
+#: includes/class-fpp-interlinking-admin.php:2226
 msgid "Unauthorized."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:926
-#: includes/class-fpp-interlinking-admin.php:1563
+#: includes/class-fpp-interlinking-admin.php:1029
+#: includes/class-fpp-interlinking-admin.php:1682
 msgid "Keyword and URL are required."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:931
+#: includes/class-fpp-interlinking-admin.php:1034
 msgid ""
 "This keyword already exists. Please use a different keyword or edit the "
 "existing one."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:950
+#: includes/class-fpp-interlinking-admin.php:1053
 msgid "Keyword added successfully."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:962
-#: includes/class-fpp-interlinking-admin.php:1593
+#: includes/class-fpp-interlinking-admin.php:1065
+#: includes/class-fpp-interlinking-admin.php:1712
 msgid "Failed to add keyword."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:983
+#: includes/class-fpp-interlinking-admin.php:1086
 msgid "ID, keyword, and URL are required."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:988
+#: includes/class-fpp-interlinking-admin.php:1091
 msgid "Another keyword with this text already exists."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1007
+#: includes/class-fpp-interlinking-admin.php:1110
 msgid "Keyword updated successfully."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1019
+#: includes/class-fpp-interlinking-admin.php:1122
 msgid "Failed to update keyword."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1038
-#: includes/class-fpp-interlinking-admin.php:1067
+#: includes/class-fpp-interlinking-admin.php:1141
+#: includes/class-fpp-interlinking-admin.php:1170
 msgid "Invalid keyword ID."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1045
+#: includes/class-fpp-interlinking-admin.php:1148
 msgid "Keyword deleted successfully."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1047
+#: includes/class-fpp-interlinking-admin.php:1150
 msgid "Failed to delete keyword."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1076
+#: includes/class-fpp-interlinking-admin.php:1179
 msgid "Keyword enabled."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1077
+#: includes/class-fpp-interlinking-admin.php:1180
 msgid "Keyword disabled."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1081
+#: includes/class-fpp-interlinking-admin.php:1184
 msgid "Failed to toggle keyword."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1157
+#: includes/class-fpp-interlinking-admin.php:1268
 msgid "Settings saved successfully."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1225
-#: includes/class-fpp-interlinking-admin.php:1448
-#: includes/class-fpp-interlinking-admin.php:1858
+#: includes/class-fpp-interlinking-admin.php:1336
+#: includes/class-fpp-interlinking-admin.php:1567
+#: includes/class-fpp-interlinking-admin.php:1977
 msgid "Keyword is required."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1354
+#: includes/class-fpp-interlinking-admin.php:1473
 msgid "AI settings saved."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1377
+#: includes/class-fpp-interlinking-admin.php:1496
 msgid "Connection successful! Your AI provider is working."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1400
-#: includes/class-fpp-interlinking-admin.php:1803
+#: includes/class-fpp-interlinking-admin.php:1519
+#: includes/class-fpp-interlinking-admin.php:1922
 msgid "Please select a post to analyse."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1476
-#: includes/class-fpp-interlinking-admin.php:1888
+#: includes/class-fpp-interlinking-admin.php:1595
+#: includes/class-fpp-interlinking-admin.php:2007
 msgid "No matching posts found for this keyword."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1567
+#: includes/class-fpp-interlinking-admin.php:1686
 msgid "This keyword already exists."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1581
+#: includes/class-fpp-interlinking-admin.php:1700
 #, php-format
 msgid "Keyword \"%s\" added successfully."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1639
+#: includes/class-fpp-interlinking-admin.php:1758
 msgid "Invalid bulk action or no items selected."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1658
+#: includes/class-fpp-interlinking-admin.php:1777
 msgid "Unknown bulk action."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1667
+#: includes/class-fpp-interlinking-admin.php:1786
 #, php-format
 msgid "%d keyword(s) updated."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1727
+#: includes/class-fpp-interlinking-admin.php:1846
 msgid "No CSV data provided."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1732
+#: includes/class-fpp-interlinking-admin.php:1851
 msgid "CSV file is empty or has no data rows."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1740
+#: includes/class-fpp-interlinking-admin.php:1859
 msgid "CSV must have \"keyword\" and \"target_url\" columns."
 msgstr ""
 
-#: includes/class-fpp-interlinking-admin.php:1763
+#: includes/class-fpp-interlinking-admin.php:1882
 #, php-format
 msgid "Import complete: %1$d imported, %2$d skipped (duplicates), %3$d errors."
 msgstr ""
 
-#: includes/class-fpp-interlinking-ai.php:242
+#: includes/class-fpp-interlinking-admin.php:2204
+msgid "Invalid tab."
+msgstr ""
+
+#: includes/class-fpp-interlinking-admin.php:2243
+msgid "No data to export."
+msgstr ""
+
+#: includes/class-fpp-interlinking-ai.php:308
 #, php-format
 msgid ""
 "Please wait %d seconds between AI requests to avoid excessive API costs."
 msgstr ""
 
-#: includes/class-fpp-interlinking-ai.php:267
+#: includes/class-fpp-interlinking-ai.php:347
 msgid ""
 "AI API key is not configured. Please add your API key in the AI Settings "
 "section."
 msgstr ""
 
-#: includes/class-fpp-interlinking-ai.php:324
-#: includes/class-fpp-interlinking-ai.php:378
+#: includes/class-fpp-interlinking-ai.php:409
+#: includes/class-fpp-interlinking-ai.php:463
+#: includes/class-fpp-interlinking-ai.php:522
+#: includes/class-fpp-interlinking-ai.php:579
 msgid "Unknown API error."
 msgstr ""
 
-#: includes/class-fpp-interlinking-ai.php:325
-#: includes/class-fpp-interlinking-ai.php:379
+#: includes/class-fpp-interlinking-ai.php:410
+#: includes/class-fpp-interlinking-ai.php:464
+#: includes/class-fpp-interlinking-ai.php:523
+#: includes/class-fpp-interlinking-ai.php:580
 #, php-format
 msgid "AI API error (%d): %s"
 msgstr ""
 
-#: includes/class-fpp-interlinking-ai.php:332
-#: includes/class-fpp-interlinking-ai.php:386
+#: includes/class-fpp-interlinking-ai.php:417
+#: includes/class-fpp-interlinking-ai.php:471
+#: includes/class-fpp-interlinking-ai.php:530
+#: includes/class-fpp-interlinking-ai.php:587
 msgid "Could not parse AI response."
 msgstr ""
 
-#: includes/class-fpp-interlinking-ai.php:402
+#: includes/class-fpp-interlinking-ai.php:603
 #: includes/class-fpp-interlinking-analyzer.php:72
 msgid "Post not found."
 msgstr ""
 
-#: includes/class-fpp-interlinking-ai.php:530
+#: includes/class-fpp-interlinking-ai.php:732
 msgid "No published posts found to analyse."
 msgstr ""
 
-#: includes/class-fpp-interlinking-ai.php:599
-#: includes/class-fpp-interlinking-ai.php:600
+#: includes/class-fpp-interlinking-ai.php:801
+#: includes/class-fpp-interlinking-ai.php:802
 msgid "Unknown"
 msgstr ""
 
-#: includes/class-fpp-interlinking-ai.php:640
+#: includes/class-fpp-interlinking-ai.php:843
 msgid "No published posts found."
 msgstr ""
 
-#: includes/class-fpp-interlinking-ai.php:778
+#: includes/class-fpp-interlinking-ai.php:981
 msgid "Failed to parse AI response. Please try again."
 msgstr ""
 
-#: includes/class-fpp-interlinking-ai.php:785
+#: includes/class-fpp-interlinking-ai.php:988
 msgid "AI returned an empty result set. Please try again."
 msgstr ""
 
-#: includes/class-fpp-interlinking-ai.php:793
+#: includes/class-fpp-interlinking-ai.php:996
 msgid "AI response format is unexpected. Please try again."
 msgstr ""
 

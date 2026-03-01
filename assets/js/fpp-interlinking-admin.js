@@ -7,6 +7,10 @@
 		keywordsPage: 1,
 		keywordsSearch: '',
 		analyticsPeriod: '30d',
+		analyticsStartDate: '',
+		analyticsEndDate: '',
+		trendChart: null,
+		postTypeChart: null,
 
 		init: function() {
 			this.bindEvents();
@@ -98,9 +102,42 @@
 
 			// Analytics period.
 			$(document).on('click', '.fpp-period-btn', function() {
+				var period = $(this).data('period');
 				$('.fpp-period-btn').removeClass('active');
 				$(this).addClass('active');
-				FPP.loadAnalytics($(this).data('period'));
+				if (period === 'custom') {
+					$('#fpp-custom-date-range').show();
+				} else {
+					$('#fpp-custom-date-range').hide();
+					FPP.analyticsStartDate = '';
+					FPP.analyticsEndDate = '';
+					FPP.loadAnalytics(period);
+				}
+			});
+
+			// Custom date range apply.
+			$(document).on('click', '#fpp-apply-custom-date', function() {
+				FPP.analyticsStartDate = $('#fpp-date-start').val();
+				FPP.analyticsEndDate = $('#fpp-date-end').val();
+				if (FPP.analyticsStartDate && FPP.analyticsEndDate) {
+					FPP.loadAnalytics('custom');
+				}
+			});
+
+			// Analytics CSV export.
+			$(document).on('click', '#fpp-export-analytics-csv', FPP.exportAnalyticsCsv);
+
+			// AJAX tab switching.
+			$(document).on('click', '.fpp-nav-tabs .nav-tab', function(e) {
+				e.preventDefault();
+				var tab = $(this).data('tab');
+				FPP.switchTab(tab);
+			});
+
+			// Handle browser back/forward.
+			$(window).on('popstate', function() {
+				var tab = FPP.getCurrentTab();
+				FPP.switchTab(tab, true);
 			});
 
 			// Keyboard support for section toggles.
@@ -152,21 +189,32 @@
 			var cov = data.coverage || {};
 			var sum = data.summary || {};
 
-			$('#fpp-dash-total-keywords').text(cov.active_keywords || 0);
+			$('#fpp-dash-total-keywords').text(cov.total_keywords || 0);
 			$('#fpp-dash-active-keywords').text(cov.active_keywords || 0);
 			$('#fpp-dash-clicks-30d').text(sum.total_clicks || 0);
 			$('#fpp-dash-coverage').text((cov.coverage_percent || 0) + '%');
+
+			// 7-day sparkline for clicks.
+			var trend = data.trend_7d || [];
+			if (trend.length > 0) {
+				FPP.renderSparkline('fpp-spark-clicks', trend.map(function(d) { return d.clicks; }));
+			}
 
 			// Recent clicks table.
 			var $container = $('#fpp-dashboard-recent-table');
 			var recent = data.recent || [];
 
 			if (recent.length === 0) {
-				$container.html('<p class="description">' + FPP.escHtml(fppInterlinking.i18n.no_clicks_yet) + '</p>');
+				$container.html(
+					'<div class="fpp-empty-state fpp-empty-state-small">'
+					+ '<span class="dashicons dashicons-chart-line fpp-empty-icon" aria-hidden="true"></span>'
+					+ '<p>' + FPP.escHtml(fppInterlinking.i18n.no_recent_empty) + '</p>'
+					+ '</div>'
+				);
 				return;
 			}
 
-			var html = '<table class="wp-list-table widefat fixed striped">'
+			var html = '<table class="wp-list-table widefat fixed striped fpp-sortable">'
 				+ '<thead><tr>'
 				+ '<th>' + FPP.escHtml(fppInterlinking.i18n.keyword) + '</th>'
 				+ '<th>' + FPP.escHtml(fppInterlinking.i18n.url) + '</th>'
@@ -183,6 +231,7 @@
 
 			html += '</tbody></table>';
 			$container.html(html);
+			FPP.makeSortable($container.find('table'));
 		},
 
 		/* ── Analytics ───────────────────────────────────────────────── */
@@ -190,16 +239,22 @@
 		loadAnalytics: function(period) {
 			FPP.analyticsPeriod = period;
 
-			$('#fpp-analytics-top-keywords, #fpp-analytics-clicks-by-post').html(
-				'<p><span class="spinner is-active" style="float:none;"></span> ' + FPP.escHtml(fppInterlinking.i18n.loading) + '</p>'
+			$('#fpp-analytics-top-keywords, #fpp-analytics-clicks-by-post, #fpp-analytics-top-links').html(
+				'<div class="fpp-skeleton fpp-skeleton-table"></div>'
 			);
-			$('#fpp-trend-chart').html('');
 
-			$.post(fppInterlinking.ajax_url, {
+			var postData = {
 				action: 'fpp_interlinking_load_analytics',
 				nonce:  fppInterlinking.nonce,
 				period: period
-			}, function(response) {
+			};
+
+			if (period === 'custom') {
+				postData.start_date = FPP.analyticsStartDate;
+				postData.end_date   = FPP.analyticsEndDate;
+			}
+
+			$.post(fppInterlinking.ajax_url, postData, function(response) {
 				if (response.success) {
 					FPP.renderAnalytics(response.data);
 				}
@@ -208,21 +263,37 @@
 
 		renderAnalytics: function(data) {
 			var sum = data.summary || {};
+			var cmp = data.comparison || {};
 
 			$('#fpp-analytics-total-clicks').text(sum.total_clicks || 0);
-			$('#fpp-analytics-unique-keywords').text(sum.unique_keywords || 0);
-			$('#fpp-analytics-avg-clicks').text(sum.avg_clicks_per_keyword || '0');
+			$('#fpp-analytics-impressions').text(sum.total_impressions || 0);
+			$('#fpp-analytics-ctr').text((sum.ctr || 0) + '%');
 			$('#fpp-analytics-top-keyword').text(sum.top_keyword || '—');
 
-			// Click trend chart (simple bar chart with divs).
+			// Comparison badges.
+			FPP.renderComparisonBadge('#fpp-cmp-clicks', cmp.clicks_change);
+			FPP.renderComparisonBadge('#fpp-cmp-impressions', cmp.impr_change);
+			FPP.renderComparisonBadge('#fpp-cmp-ctr', cmp.ctr_change, true);
+
+			// Show/hide empty state.
+			var hasData = (sum.total_clicks || 0) > 0 || (sum.total_impressions || 0) > 0;
+			$('#fpp-analytics-empty').toggle(!hasData);
+			$('#fpp-analytics-trend, #fpp-analytics-tables, #fpp-analytics-extra').toggle(hasData);
+
+			if (!hasData) return;
+
+			// Click trend chart (Chart.js).
 			FPP.renderTrendChart(data.daily_trend || []);
 
-			// Top keywords table.
+			// Post type doughnut chart.
+			FPP.renderPostTypeChart(data.post_type_stats || []);
+
+			// Top keywords table with CTR.
 			FPP.renderAnalyticsTable(
 				'#fpp-analytics-top-keywords',
-				[fppInterlinking.i18n.keyword, fppInterlinking.i18n.clicks],
+				[fppInterlinking.i18n.keyword, fppInterlinking.i18n.clicks, fppInterlinking.i18n.impressions, fppInterlinking.i18n.ctr],
 				(data.top_keywords || []).map(function(kw) {
-					return [kw.keyword || '—', kw.clicks || 0];
+					return [kw.keyword || '—', kw.clicks || 0, kw.impressions || 0, (kw.ctr || 0) + '%'];
 				})
 			);
 
@@ -234,33 +305,109 @@
 					return [p.post_title || '—', p.clicks || 0];
 				})
 			);
+
+			// Top links table.
+			FPP.renderAnalyticsTable(
+				'#fpp-analytics-top-links',
+				[fppInterlinking.i18n.keyword, fppInterlinking.i18n.url, fppInterlinking.i18n.clicks],
+				(data.top_links || []).map(function(l) {
+					return [l.keyword || '—', l.target_url || '—', l.clicks || 0];
+				})
+			);
 		},
 
 		renderTrendChart: function(trend) {
-			var $chart = $('#fpp-trend-chart');
+			var canvas = document.getElementById('fpp-trend-chart');
+			if (!canvas || typeof Chart === 'undefined') return;
 
-			if (!trend || trend.length === 0) {
-				$chart.html('<p class="description">' + FPP.escHtml(fppInterlinking.i18n.no_data) + '</p>');
-				return;
+			if (FPP.trendChart) {
+				FPP.trendChart.destroy();
+				FPP.trendChart = null;
 			}
 
-			var maxClicks = 1;
-			$.each(trend, function(i, d) {
-				if (d.clicks > maxClicks) maxClicks = d.clicks;
-			});
+			if (!trend || trend.length === 0) return;
 
-			var html = '<div class="fpp-bar-chart">';
-			$.each(trend, function(i, d) {
-				var height = Math.max(2, Math.round((d.clicks / maxClicks) * 120));
-				var label = d.date ? d.date.substring(5) : '';
-				html += '<div class="fpp-bar-col">'
-					+ '<div class="fpp-bar" style="height:' + height + 'px;" title="' + FPP.escAttr(d.date + ': ' + d.clicks + ' clicks') + '"></div>'
-					+ '<span class="fpp-bar-label">' + FPP.escHtml(label) + '</span>'
-					+ '</div>';
-			});
-			html += '</div>';
+			var labels = trend.map(function(d) { return d.date ? d.date.substring(5) : ''; });
+			var values = trend.map(function(d) { return d.clicks || 0; });
 
-			$chart.html(html);
+			FPP.trendChart = new Chart(canvas.getContext('2d'), {
+				type: 'line',
+				data: {
+					labels: labels,
+					datasets: [{
+						label: fppInterlinking.i18n.clicks || 'Clicks',
+						data: values,
+						borderColor: '#2271b1',
+						backgroundColor: 'rgba(34, 113, 177, 0.08)',
+						fill: true,
+						tension: 0.3,
+						pointRadius: trend.length > 60 ? 0 : 3,
+						pointHoverRadius: 5,
+						borderWidth: 2
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: { display: false },
+						tooltip: { mode: 'index', intersect: false }
+					},
+					scales: {
+						y: { beginAtZero: true, ticks: { precision: 0 } },
+						x: { ticks: { maxTicksLimit: 15 } }
+					}
+				}
+			});
+		},
+
+		renderPostTypeChart: function(stats) {
+			var canvas = document.getElementById('fpp-post-type-chart');
+			if (!canvas || typeof Chart === 'undefined') return;
+
+			if (FPP.postTypeChart) {
+				FPP.postTypeChart.destroy();
+				FPP.postTypeChart = null;
+			}
+
+			if (!stats || stats.length === 0) return;
+
+			var labels = stats.map(function(s) { return s.post_type || '—'; });
+			var values = stats.map(function(s) { return s.clicks || 0; });
+			var colors = ['#2271b1', '#00a32a', '#dba617', '#d63638', '#9b59b6', '#3498db', '#e67e22', '#1abc9c'];
+
+			FPP.postTypeChart = new Chart(canvas.getContext('2d'), {
+				type: 'doughnut',
+				data: {
+					labels: labels,
+					datasets: [{
+						data: values,
+						backgroundColor: colors.slice(0, labels.length),
+						borderWidth: 2,
+						borderColor: '#fff'
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: { position: 'bottom', labels: { padding: 16 } }
+					}
+				}
+			});
+		},
+
+		renderComparisonBadge: function(selector, change, isCtr) {
+			var $badge = $(selector);
+			if (typeof change === 'undefined' || change === null || change === 0) {
+				$badge.html('').hide();
+				return;
+			}
+			var isPositive = change > 0;
+			var sign = isPositive ? '+' : '';
+			var suffix = isCtr ? 'pp' : '%';
+			var cls = isPositive ? 'fpp-badge-up' : 'fpp-badge-down';
+			$badge.html('<span class="' + cls + '">' + sign + change + suffix + '</span>').show();
 		},
 
 		renderAnalyticsTable: function(selector, headers, rows) {
@@ -271,7 +418,7 @@
 				return;
 			}
 
-			var html = '<table class="wp-list-table widefat fixed striped"><thead><tr>';
+			var html = '<table class="wp-list-table widefat fixed striped fpp-sortable"><thead><tr>';
 			$.each(headers, function(i, h) {
 				html += '<th>' + FPP.escHtml(h) + '</th>';
 			});
@@ -287,6 +434,7 @@
 
 			html += '</tbody></table>';
 			$container.html(html);
+			FPP.makeSortable($container.find('table'));
 		},
 
 		/* ── Settings ────────────────────────────────────────────────── */
@@ -328,6 +476,7 @@
 				data.ai_api_key    = $('#fpp-ai-api-key').val();
 				data.ai_model      = $('#fpp-ai-model').val();
 				data.ai_max_tokens = $('#fpp-ai-max-tokens').val();
+				data.ai_base_url   = $('#fpp-ai-base-url').val();
 			}
 
 			$.post(fppInterlinking.ajax_url, data, function(response) {
@@ -1377,12 +1526,33 @@
 
 		onProviderChange: function() {
 			var provider = $(this).val();
-			var defaults = { openai: 'gpt-4o-mini', anthropic: 'claude-sonnet-4-20250514' };
+			var $selected = $(this).find(':selected');
+			var requiresKey = $selected.data('requires-key') === 1 || $selected.data('requires-key') === '1';
+
+			var defaults = {
+				openai: 'gpt-4o-mini',
+				anthropic: 'claude-sonnet-4-20250514',
+				ollama: 'llama3.2',
+				gemini: 'gemini-2.0-flash',
+				mistral: 'mistral-small-latest',
+				deepseek: 'deepseek-chat'
+			};
+
+			// Toggle API key vs base URL visibility.
+			$('#fpp-ai-api-key-row').toggle(requiresKey);
+			$('#fpp-ai-base-url-row').toggle(provider === 'ollama');
+
+			// Swap model if it belongs to a different provider.
 			var $model = $('#fpp-ai-model');
 			var current = $model.val();
-			if ((provider === 'openai' && current.indexOf('claude') === 0) ||
-				(provider === 'anthropic' && current.indexOf('gpt') === 0) ||
-				!current) {
+			var isOtherProviderModel = false;
+			$.each(defaults, function(key, model) {
+				if (key !== provider && current === model) {
+					isOtherProviderModel = true;
+					return false;
+				}
+			});
+			if (!current || isOtherProviderModel) {
 				$model.val(defaults[provider] || '');
 			}
 		},
@@ -1419,6 +1589,142 @@
 				.replace(/'/g, '&#39;')
 				.replace(/</g, '&lt;')
 				.replace(/>/g, '&gt;');
+		},
+
+		/* ── v4.0.0: AJAX Tab Switching ──────────────────────────────── */
+
+		switchTab: function(tab, fromPopstate) {
+			if (!tab) return;
+
+			// Update active tab highlight.
+			$('.fpp-nav-tabs .nav-tab').removeClass('nav-tab-active');
+			$('.fpp-nav-tabs .nav-tab[data-tab="' + tab + '"]').addClass('nav-tab-active');
+
+			// Show skeleton while loading.
+			$('.fpp-tab-content').html('<div class="fpp-skeleton fpp-skeleton-content"></div>');
+
+			// Update URL without reload.
+			if (!fromPopstate) {
+				var url = new URL(window.location.href);
+				url.searchParams.set('tab', tab);
+				history.pushState({ tab: tab }, '', url.toString());
+			}
+
+			$.post(fppInterlinking.ajax_url, {
+				action: 'fpp_interlinking_load_tab',
+				nonce:  fppInterlinking.nonce,
+				tab:    tab
+			}, function(response) {
+				if (response.success) {
+					$('.fpp-tab-content').html(response.data.html);
+					FPP.initCurrentTab();
+				}
+			}).fail(function() {
+				$('.fpp-tab-content').html('<p>' + FPP.escHtml(fppInterlinking.i18n.request_failed) + '</p>');
+			});
+		},
+
+		/* ── v4.0.0: Analytics CSV Export ────────────────────────────── */
+
+		exportAnalyticsCsv: function(e) {
+			e.preventDefault();
+			var $btn = $(this);
+			$btn.prop('disabled', true);
+
+			var postData = {
+				action: 'fpp_interlinking_export_analytics_csv',
+				nonce:  fppInterlinking.nonce,
+				type:   'top_keywords',
+				period: FPP.analyticsPeriod
+			};
+
+			if (FPP.analyticsPeriod === 'custom') {
+				postData.start_date = FPP.analyticsStartDate;
+				postData.end_date   = FPP.analyticsEndDate;
+			}
+
+			$.post(fppInterlinking.ajax_url, postData, function(response) {
+				$btn.prop('disabled', false);
+				if (response.success) {
+					var blob = new Blob([response.data.csv], { type: 'text/csv;charset=utf-8;' });
+					var link = document.createElement('a');
+					link.href = URL.createObjectURL(blob);
+					link.download = response.data.filename;
+					link.click();
+					URL.revokeObjectURL(link.href);
+				} else {
+					FPP.showNotice('error', response.data.message);
+				}
+			}).fail(function() {
+				$btn.prop('disabled', false);
+				FPP.showNotice('error', fppInterlinking.i18n.request_failed);
+			});
+		},
+
+		/* ── v4.0.0: Sortable Tables ────────────────────────────────── */
+
+		makeSortable: function($table) {
+			if (!$table.length || !$table.hasClass('fpp-sortable')) return;
+
+			$table.find('thead th').each(function(colIdx) {
+				var $th = $(this);
+				if ($th.hasClass('column-cb') || $th.hasClass('column-actions')) return;
+
+				$th.addClass('fpp-sort-header').on('click', function() {
+					var $tbody = $table.find('tbody');
+					var rows = $tbody.find('tr').get();
+					var asc = !$th.hasClass('fpp-sort-asc');
+
+					// Reset other headers.
+					$table.find('th').removeClass('fpp-sort-asc fpp-sort-desc');
+					$th.addClass(asc ? 'fpp-sort-asc' : 'fpp-sort-desc');
+
+					rows.sort(function(a, b) {
+						var aVal = $(a).children('td').eq(colIdx).text().trim();
+						var bVal = $(b).children('td').eq(colIdx).text().trim();
+						var aNum = parseFloat(aVal.replace(/[^0-9.\-]/g, ''));
+						var bNum = parseFloat(bVal.replace(/[^0-9.\-]/g, ''));
+
+						if (!isNaN(aNum) && !isNaN(bNum)) {
+							return asc ? aNum - bNum : bNum - aNum;
+						}
+						return asc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+					});
+
+					$.each(rows, function(i, row) {
+						$tbody.append(row);
+					});
+				});
+			});
+		},
+
+		/* ── v4.0.0: Sparkline Mini Charts ──────────────────────────── */
+
+		renderSparkline: function(canvasId, values) {
+			var canvas = document.getElementById(canvasId);
+			if (!canvas || typeof Chart === 'undefined' || !values || values.length === 0) return;
+
+			new Chart(canvas.getContext('2d'), {
+				type: 'line',
+				data: {
+					labels: values.map(function() { return ''; }),
+					datasets: [{
+						data: values,
+						borderColor: '#2271b1',
+						borderWidth: 1.5,
+						pointRadius: 0,
+						fill: false,
+						tension: 0.4
+					}]
+				},
+				options: {
+					responsive: false,
+					maintainAspectRatio: false,
+					plugins: { legend: { display: false }, tooltip: { enabled: false } },
+					scales: { x: { display: false }, y: { display: false } },
+					animation: false
+				}
+			});
 		}
 	};
 

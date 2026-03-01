@@ -4,6 +4,10 @@
 	margin-bottom: 0;
 }
 
+.fpp-nav-tabs .nav-tab {
+	transition: color 0.15s, border-color 0.15s;
+}
+
 .fpp-tab-content {
 	padding: 20px 0;
 }
@@ -12,18 +16,46 @@
 
 .fpp-stat-cards {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 	gap: 16px;
 	margin-bottom: 24px;
 }
 
 .fpp-stat-card {
 	background: #fff;
-	border: 1px solid #c3c4c7;
-	border-radius: 4px;
+	border: 1px solid #e2e4e7;
+	border-radius: 8px;
 	padding: 20px;
 	text-align: center;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+	border-left: 4px solid #c3c4c7;
+	position: relative;
+	transition: transform 0.15s, box-shadow 0.15s;
 }
+
+.fpp-stat-card:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fpp-stat-card.fpp-card-blue { border-left-color: #2271b1; }
+.fpp-stat-card.fpp-card-green { border-left-color: #00a32a; }
+.fpp-stat-card.fpp-card-orange { border-left-color: #dba617; }
+.fpp-stat-card.fpp-card-purple { border-left-color: #8b5cf6; }
+
+.fpp-stat-icon {
+	display: block;
+	font-size: 24px;
+	width: 24px;
+	height: 24px;
+	margin: 0 auto 8px;
+	color: #646970;
+}
+
+.fpp-stat-card.fpp-card-blue .fpp-stat-icon { color: #2271b1; }
+.fpp-stat-card.fpp-card-green .fpp-stat-icon { color: #00a32a; }
+.fpp-stat-card.fpp-card-orange .fpp-stat-icon { color: #dba617; }
+.fpp-stat-card.fpp-card-purple .fpp-stat-icon { color: #8b5cf6; }
 
 .fpp-stat-value {
 	display: block;
@@ -40,6 +72,11 @@
 	margin-top: 4px;
 }
 
+.fpp-sparkline {
+	display: block;
+	margin: 8px auto 0;
+}
+
 .fpp-dashboard-actions {
 	margin-bottom: 24px;
 }
@@ -47,6 +84,7 @@
 .fpp-dashboard-actions .button {
 	margin-right: 8px;
 	margin-bottom: 4px;
+	transition: background 0.15s;
 }
 
 .fpp-dashboard-actions .button .dashicons {
@@ -59,6 +97,33 @@
 
 .fpp-dashboard-recent {
 	margin-bottom: 20px;
+}
+
+/* ── Comparison Badges ─────────────────────────────────────────── */
+
+.fpp-comparison-badge {
+	display: block;
+	margin-top: 6px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.fpp-badge-up {
+	color: #00a32a;
+}
+
+.fpp-badge-up::before {
+	content: "\25B2 ";
+	font-size: 9px;
+}
+
+.fpp-badge-down {
+	color: #d63638;
+}
+
+.fpp-badge-down::before {
+	content: "\25BC ";
+	font-size: 9px;
 }
 
 /* ── Sections ───────────────────────────────────────────────────── */
@@ -121,6 +186,7 @@
 .column-actions .button {
 	margin-right: 4px;
 	margin-bottom: 4px;
+	transition: background 0.15s;
 }
 
 /* ── Per-mapping overrides fieldset ─────────────────────────────── */
@@ -530,16 +596,24 @@
 
 /* ── Analytics ──────────────────────────────────────────────────── */
 
+.fpp-analytics-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 20px;
+}
+
 .fpp-period-selector {
 	display: flex;
 	gap: 6px;
-	margin-bottom: 20px;
 	flex-wrap: wrap;
 }
 
 .fpp-period-btn {
 	min-width: 80px;
 	text-align: center;
+	transition: background 0.15s, color 0.15s;
 }
 
 .fpp-period-btn.active {
@@ -555,6 +629,33 @@
 	color: #fff;
 }
 
+.fpp-analytics-actions {
+	margin-left: auto;
+}
+
+.fpp-analytics-actions .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+	vertical-align: text-bottom;
+	margin-right: 2px;
+}
+
+/* Custom date range */
+.fpp-custom-date-range {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.fpp-date-input {
+	max-width: 150px;
+}
+
+.fpp-date-sep {
+	color: #646970;
+}
+
 .fpp-analytics-section {
 	margin-bottom: 24px;
 }
@@ -565,41 +666,136 @@
 	gap: 24px;
 }
 
-/* Bar chart */
-.fpp-bar-chart {
-	display: flex;
-	align-items: flex-end;
-	gap: 3px;
-	height: 140px;
-	padding: 10px 0;
-	border-bottom: 1px solid #c3c4c7;
+/* Chart.js containers */
+.fpp-chart-container {
+	position: relative;
+	height: 280px;
+	background: #fff;
+	border: 1px solid #e2e4e7;
+	border-radius: 8px;
+	padding: 16px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
-.fpp-bar-col {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	min-width: 0;
+.fpp-chart-container.fpp-chart-small {
+	height: 240px;
 }
 
-.fpp-bar {
+/* ── Skeleton Loaders ──────────────────────────────────────────── */
+
+.fpp-skeleton {
+	background: linear-gradient(90deg, #f0f0f1 25%, #e8e8e9 50%, #f0f0f1 75%);
+	background-size: 200% 100%;
+	animation: fpp-skeleton-pulse 1.5s ease-in-out infinite;
+	border-radius: 4px;
+}
+
+@keyframes fpp-skeleton-pulse {
+	0% { background-position: 200% 0; }
+	100% { background-position: -200% 0; }
+}
+
+.fpp-skeleton-table {
+	height: 160px;
+}
+
+.fpp-skeleton-content {
+	height: 400px;
+	margin-top: 10px;
+}
+
+.fpp-skeleton-card {
+	height: 80px;
+}
+
+/* ── Sortable Tables ───────────────────────────────────────────── */
+
+.fpp-sort-header {
+	cursor: pointer;
+	user-select: none;
+	position: relative;
+	padding-right: 18px !important;
+}
+
+.fpp-sort-header:hover {
+	color: #2271b1;
+}
+
+.fpp-sort-header::after {
+	content: "\2195";
+	position: absolute;
+	right: 4px;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 11px;
+	color: #c3c4c7;
+}
+
+.fpp-sort-header.fpp-sort-asc::after {
+	content: "\25B2";
+	color: #2271b1;
+}
+
+.fpp-sort-header.fpp-sort-desc::after {
+	content: "\25BC";
+	color: #2271b1;
+}
+
+/* ── Table row hover ───────────────────────────────────────────── */
+
+.wp-list-table.fpp-sortable tbody tr:hover {
+	background: #f0f7fc;
+}
+
+/* ── Progress Bar ──────────────────────────────────────────────── */
+
+.fpp-progress-bar-container {
 	width: 100%;
-	max-width: 24px;
-	background: #2271b1;
-	border-radius: 2px 2px 0 0;
-	transition: height 0.3s ease;
+	height: 8px;
+	background: #e2e4e7;
+	border-radius: 4px;
+	overflow: hidden;
+	margin: 8px 0;
 }
 
-.fpp-bar-label {
-	font-size: 10px;
-	color: #646970;
-	margin-top: 4px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	max-width: 100%;
+.fpp-progress-bar {
+	height: 100%;
+	background: #2271b1;
+	border-radius: 4px;
+	transition: width 0.3s ease;
+}
+
+/* ── Empty States ──────────────────────────────────────────────── */
+
+.fpp-empty-state {
 	text-align: center;
+	padding: 48px 24px;
+	color: #646970;
+}
+
+.fpp-empty-state-small {
+	padding: 24px 16px;
+}
+
+.fpp-empty-icon {
+	font-size: 48px;
+	width: 48px;
+	height: 48px;
+	color: #c3c4c7;
+	display: block;
+	margin: 0 auto 16px;
+}
+
+.fpp-empty-state h3 {
+	color: #1d2327;
+	margin: 0 0 8px;
+}
+
+.fpp-empty-state p {
+	margin: 0 0 16px;
+	max-width: 400px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 /* ── Table Toolbar (Bulk Actions, Import/Export, Search) ────────── */
@@ -707,6 +903,19 @@
 		flex-direction: column;
 		align-items: flex-start;
 	}
+
+	.fpp-analytics-toolbar {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.fpp-analytics-actions {
+		margin-left: 0;
+	}
+
+	.fpp-chart-container {
+		height: 220px;
+	}
 }
 
 @media screen and (max-width: 480px) {
@@ -716,9 +925,19 @@
 
 	.fpp-period-selector {
 		flex-direction: column;
+		width: 100%;
 	}
 
 	.fpp-period-btn {
+		width: 100%;
+	}
+
+	.fpp-custom-date-range {
+		flex-wrap: wrap;
+	}
+
+	.fpp-date-input {
+		max-width: 100%;
 		width: 100%;
 	}
 }

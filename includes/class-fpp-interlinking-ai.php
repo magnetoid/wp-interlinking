@@ -1,6 +1,14 @@
 <?php
 /**
- * AI-powered interlinking features using OpenAI-compatible APIs.
+ * AI-powered interlinking features using multiple LLM providers.
+ *
+ * Supported providers:
+ *  - OpenAI (gpt-4o-mini, gpt-4o)
+ *  - Anthropic / Claude (claude-sonnet-4-20250514, claude-haiku-4-5-20251001)
+ *  - Ollama — self-hosted, no API key required
+ *  - Google Gemini (gemini-2.0-flash, gemini-2.0-flash-lite)
+ *  - Mistral AI (mistral-small-latest, mistral-large-latest)
+ *  - DeepSeek (deepseek-chat, deepseek-reasoner)
  *
  * Provides four AI capabilities:
  *  1. Keyword Extraction — Analyze post content to extract SEO-relevant key phrases.
@@ -30,6 +38,45 @@ class FPP_Interlinking_AI {
 	const OPTION_MODEL      = 'fpp_interlinking_ai_model';
 	const OPTION_PROVIDER   = 'fpp_interlinking_ai_provider';
 	const OPTION_MAX_TOKENS = 'fpp_interlinking_ai_max_tokens';
+	const OPTION_BASE_URL   = 'fpp_interlinking_ai_base_url';
+
+	/**
+	 * Provider metadata: label, whether an API key is required, model suggestions.
+	 *
+	 * @since 4.0.0
+	 */
+	const PROVIDER_INFO = array(
+		'openai'    => array(
+			'label'        => 'OpenAI',
+			'requires_key' => true,
+			'models'       => 'gpt-4o-mini, gpt-4o',
+		),
+		'anthropic' => array(
+			'label'        => 'Anthropic (Claude)',
+			'requires_key' => true,
+			'models'       => 'claude-sonnet-4-20250514, claude-haiku-4-5-20251001',
+		),
+		'ollama'    => array(
+			'label'        => 'Ollama (Self-hosted)',
+			'requires_key' => false,
+			'models'       => 'llama3.2, mistral, gemma2, qwen2.5',
+		),
+		'gemini'    => array(
+			'label'        => 'Google Gemini',
+			'requires_key' => true,
+			'models'       => 'gemini-2.0-flash, gemini-2.0-flash-lite',
+		),
+		'mistral'   => array(
+			'label'        => 'Mistral AI',
+			'requires_key' => true,
+			'models'       => 'mistral-small-latest, mistral-large-latest',
+		),
+		'deepseek'  => array(
+			'label'        => 'DeepSeek',
+			'requires_key' => true,
+			'models'       => 'deepseek-chat, deepseek-reasoner',
+		),
+	);
 
 	/**
 	 * Default model per provider.
@@ -37,6 +84,10 @@ class FPP_Interlinking_AI {
 	const DEFAULT_MODELS = array(
 		'openai'    => 'gpt-4o-mini',
 		'anthropic' => 'claude-sonnet-4-20250514',
+		'ollama'    => 'llama3.2',
+		'gemini'    => 'gemini-2.0-flash',
+		'mistral'   => 'mistral-small-latest',
+		'deepseek'  => 'deepseek-chat',
 	);
 
 	/**
@@ -45,6 +96,9 @@ class FPP_Interlinking_AI {
 	const API_ENDPOINTS = array(
 		'openai'    => 'https://api.openai.com/v1/chat/completions',
 		'anthropic' => 'https://api.anthropic.com/v1/messages',
+		'gemini'    => 'https://generativelanguage.googleapis.com/v1beta/models/',
+		'mistral'   => 'https://api.mistral.ai/v1/chat/completions',
+		'deepseek'  => 'https://api.deepseek.com/v1/chat/completions',
 	);
 
 	/* ── API Key Encryption ──────────────────────────────────────────── */
@@ -181,10 +235,11 @@ class FPP_Interlinking_AI {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return string 'openai' or 'anthropic'.
+	 * @return string Provider key (e.g. 'openai', 'anthropic', 'ollama', 'gemini', 'mistral', 'deepseek').
 	 */
 	public static function get_provider() {
-		return get_option( self::OPTION_PROVIDER, 'openai' );
+		$provider = get_option( self::OPTION_PROVIDER, 'openai' );
+		return isset( self::PROVIDER_INFO[ $provider ] ) ? $provider : 'openai';
 	}
 
 	/**
@@ -209,6 +264,17 @@ class FPP_Interlinking_AI {
 	 */
 	public static function get_max_tokens() {
 		return (int) get_option( self::OPTION_MAX_TOKENS, 2000 );
+	}
+
+	/**
+	 * Get the Ollama base URL.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string Base URL (e.g. 'http://localhost:11434').
+	 */
+	public static function get_base_url() {
+		return get_option( self::OPTION_BASE_URL, 'http://localhost:11434' );
 	}
 
 	/* ── Rate Limiting ──────────────────────────────────────────────── */
@@ -254,6 +320,9 @@ class FPP_Interlinking_AI {
 	/**
 	 * Send a prompt to the configured AI provider and return the text response.
 	 *
+	 * Routes to the correct provider-specific method based on the configured provider.
+	 * OpenAI-compatible providers (OpenAI, Mistral, DeepSeek) share the same handler.
+	 *
 	 * @since 2.0.0
 	 *
 	 * @param string $system_prompt System/context prompt.
@@ -262,38 +331,54 @@ class FPP_Interlinking_AI {
 	 * @return string|WP_Error The AI response text or WP_Error.
 	 */
 	public static function call_api( $system_prompt, $user_prompt, $temperature = 0.3 ) {
+		$provider   = self::get_provider();
+		$model      = self::get_model();
+		$max_tokens = self::get_max_tokens();
+
+		// Ollama does not require an API key.
+		if ( 'ollama' === $provider ) {
+			$api_key  = '';
+			$endpoint = trailingslashit( self::get_base_url() ) . 'api/chat';
+			return self::call_ollama( $endpoint, $model, $system_prompt, $user_prompt, $max_tokens, $temperature );
+		}
+
 		$api_key = self::get_api_key();
 		if ( empty( $api_key ) ) {
 			return new \WP_Error( 'no_api_key', __( 'AI API key is not configured. Please add your API key in the AI Settings section.', 'fpp-interlinking' ) );
 		}
 
-		$provider   = self::get_provider();
-		$model      = self::get_model();
-		$max_tokens = self::get_max_tokens();
-		$endpoint   = isset( self::API_ENDPOINTS[ $provider ] ) ? self::API_ENDPOINTS[ $provider ] : self::API_ENDPOINTS['openai'];
+		$endpoint = isset( self::API_ENDPOINTS[ $provider ] ) ? self::API_ENDPOINTS[ $provider ] : self::API_ENDPOINTS['openai'];
 
-		if ( 'anthropic' === $provider ) {
-			return self::call_anthropic( $endpoint, $api_key, $model, $system_prompt, $user_prompt, $max_tokens, $temperature );
+		switch ( $provider ) {
+			case 'anthropic':
+				return self::call_anthropic( $endpoint, $api_key, $model, $system_prompt, $user_prompt, $max_tokens, $temperature );
+
+			case 'gemini':
+				return self::call_gemini( $endpoint, $api_key, $model, $system_prompt, $user_prompt, $max_tokens, $temperature );
+
+			case 'mistral':
+			case 'deepseek':
+			case 'openai':
+			default:
+				return self::call_openai_compatible( $endpoint, $api_key, $model, $system_prompt, $user_prompt, $max_tokens, $temperature );
 		}
-
-		return self::call_openai( $endpoint, $api_key, $model, $system_prompt, $user_prompt, $max_tokens, $temperature );
 	}
 
 	/**
-	 * OpenAI-compatible API call.
+	 * OpenAI-compatible API call (works for OpenAI, Mistral, DeepSeek).
 	 *
 	 * @since 2.0.0
 	 *
 	 * @param string $endpoint      API endpoint URL.
 	 * @param string $api_key       Plain-text API key.
-	 * @param string $model         Model identifier (e.g. 'gpt-4o-mini').
+	 * @param string $model         Model identifier.
 	 * @param string $system_prompt System/context prompt.
 	 * @param string $user_prompt   User message.
 	 * @param int    $max_tokens    Maximum response tokens.
 	 * @param float  $temperature   Sampling temperature (0.0–1.0).
 	 * @return string|WP_Error The AI response text or WP_Error.
 	 */
-	private static function call_openai( $endpoint, $api_key, $model, $system_prompt, $user_prompt, $max_tokens, $temperature ) {
+	private static function call_openai_compatible( $endpoint, $api_key, $model, $system_prompt, $user_prompt, $max_tokens, $temperature ) {
 		$body = array(
 			'model'       => $model,
 			'messages'    => array(
@@ -339,7 +424,7 @@ class FPP_Interlinking_AI {
 	 *
 	 * @param string $endpoint      API endpoint URL.
 	 * @param string $api_key       Plain-text API key.
-	 * @param string $model         Model identifier (e.g. 'claude-sonnet-4-20250514').
+	 * @param string $model         Model identifier.
 	 * @param string $system_prompt System/context prompt.
 	 * @param string $user_prompt   User message.
 	 * @param int    $max_tokens    Maximum response tokens.
@@ -381,6 +466,122 @@ class FPP_Interlinking_AI {
 
 		if ( isset( $data['content'][0]['text'] ) ) {
 			return trim( $data['content'][0]['text'] );
+		}
+
+		return new \WP_Error( 'parse_error', __( 'Could not parse AI response.', 'fpp-interlinking' ) );
+	}
+
+	/**
+	 * Google Gemini API call.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $base_endpoint Base API endpoint URL.
+	 * @param string $api_key       Plain-text API key.
+	 * @param string $model         Model identifier (e.g. 'gemini-2.0-flash').
+	 * @param string $system_prompt System/context prompt.
+	 * @param string $user_prompt   User message.
+	 * @param int    $max_tokens    Maximum response tokens.
+	 * @param float  $temperature   Sampling temperature (0.0–1.0).
+	 * @return string|WP_Error The AI response text or WP_Error.
+	 */
+	private static function call_gemini( $base_endpoint, $api_key, $model, $system_prompt, $user_prompt, $max_tokens, $temperature ) {
+		$endpoint = $base_endpoint . $model . ':generateContent?key=' . $api_key;
+
+		$body = array(
+			'contents'         => array(
+				array(
+					'role'  => 'user',
+					'parts' => array(
+						array( 'text' => $system_prompt . "\n\n" . $user_prompt ),
+					),
+				),
+			),
+			'generationConfig' => array(
+				'temperature'     => $temperature,
+				'maxOutputTokens' => $max_tokens,
+			),
+		);
+
+		$response = wp_remote_post( $endpoint, array(
+			'timeout' => 120,
+			'headers' => array(
+				'Content-Type' => 'application/json',
+			),
+			'body'    => wp_json_encode( $body ),
+		) );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$code = wp_remote_retrieve_response_code( $response );
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( $code !== 200 ) {
+			$error_msg = isset( $data['error']['message'] ) ? $data['error']['message'] : __( 'Unknown API error.', 'fpp-interlinking' );
+			return new \WP_Error( 'api_error', sprintf( __( 'AI API error (%d): %s', 'fpp-interlinking' ), $code, $error_msg ) );
+		}
+
+		if ( isset( $data['candidates'][0]['content']['parts'][0]['text'] ) ) {
+			return trim( $data['candidates'][0]['content']['parts'][0]['text'] );
+		}
+
+		return new \WP_Error( 'parse_error', __( 'Could not parse AI response.', 'fpp-interlinking' ) );
+	}
+
+	/**
+	 * Ollama API call (self-hosted, no API key required).
+	 *
+	 * Uses the /api/chat endpoint which accepts an OpenAI-like messages format
+	 * but returns the response directly at message.content.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $endpoint      Full API endpoint URL.
+	 * @param string $model         Model identifier (e.g. 'llama3.2').
+	 * @param string $system_prompt System/context prompt.
+	 * @param string $user_prompt   User message.
+	 * @param int    $max_tokens    Maximum response tokens.
+	 * @param float  $temperature   Sampling temperature (0.0–1.0).
+	 * @return string|WP_Error The AI response text or WP_Error.
+	 */
+	private static function call_ollama( $endpoint, $model, $system_prompt, $user_prompt, $max_tokens, $temperature ) {
+		$body = array(
+			'model'    => $model,
+			'messages' => array(
+				array( 'role' => 'system', 'content' => $system_prompt ),
+				array( 'role' => 'user', 'content' => $user_prompt ),
+			),
+			'stream'   => false,
+			'options'  => array(
+				'temperature' => $temperature,
+				'num_predict' => $max_tokens,
+			),
+		);
+
+		$response = wp_remote_post( $endpoint, array(
+			'timeout' => 180,
+			'headers' => array(
+				'Content-Type' => 'application/json',
+			),
+			'body'    => wp_json_encode( $body ),
+		) );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$code = wp_remote_retrieve_response_code( $response );
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( $code !== 200 ) {
+			$error_msg = isset( $data['error'] ) ? $data['error'] : __( 'Unknown API error.', 'fpp-interlinking' );
+			return new \WP_Error( 'api_error', sprintf( __( 'AI API error (%d): %s', 'fpp-interlinking' ), $code, $error_msg ) );
+		}
+
+		if ( isset( $data['message']['content'] ) ) {
+			return trim( $data['message']['content'] );
 		}
 
 		return new \WP_Error( 'parse_error', __( 'Could not parse AI response.', 'fpp-interlinking' ) );
@@ -508,8 +709,9 @@ class FPP_Interlinking_AI {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param int $batch_size Number of posts to analyse.
-	 * @param int $offset     Offset for pagination.
+	 * @param int   $batch_size Number of posts to analyse.
+	 * @param int   $offset     Offset for pagination.
+	 * @param array $post_types Post types to analyse.
 	 * @return array|WP_Error Gap analysis results or WP_Error.
 	 */
 	public static function analyse_content_gaps( $batch_size = 20, $offset = 0, $post_types = array() ) {
@@ -618,8 +820,9 @@ class FPP_Interlinking_AI {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param int $batch_size Number of posts to process.
-	 * @param int $offset     Offset for batch processing.
+	 * @param int   $batch_size Number of posts to process.
+	 * @param int   $offset     Offset for batch processing.
+	 * @param array $post_types Post types to process.
 	 * @return array|WP_Error Proposed mappings or WP_Error.
 	 */
 	public static function auto_generate_mappings( $batch_size = 20, $offset = 0, $post_types = array() ) {

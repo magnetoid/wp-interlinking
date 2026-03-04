@@ -5,11 +5,11 @@
 ### AI-Powered SEO Internal Linking for WordPress
 
 The smartest way to build your site's internal linking structure.<br>
-6 AI providers. Deep analytics. Zero manual work.
+TF-IDF analysis. Site health scoring. 6 AI providers. Zero manual work.
 
 <br>
 
-[![Version](https://img.shields.io/badge/version-4.0.0-0073aa?style=for-the-badge)](https://github.com/magnetoid/wp-interlinking/releases)
+[![Version](https://img.shields.io/badge/version-5.0.0-0073aa?style=for-the-badge)](https://github.com/magnetoid/wp-interlinking/releases)
 [![WordPress](https://img.shields.io/badge/WordPress-5.8%2B-21759b?style=for-the-badge&logo=wordpress&logoColor=white)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.2%2B-777bb4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
 [![License](https://img.shields.io/badge/license-GPL--2.0-green?style=for-the-badge)](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -35,19 +35,25 @@ Internal links are one of the most powerful — and most neglected — SEO lever
 
 <table>
 <tr>
-<td width="33%" valign="top">
+<td width="25%" valign="top">
 
 **Map Keywords to URLs**<br>
 Define keyword-to-URL mappings once. The plugin finds and links them across your entire site automatically.
 
 </td>
-<td width="33%" valign="top">
+<td width="25%" valign="top">
+
+**Smart SEO Analysis**<br>
+TF-IDF keyword extraction, site health scoring, orphan page detection, and link distribution analysis — no AI required.
+
+</td>
+<td width="25%" valign="top">
 
 **Let AI Do the Work**<br>
 Connect any of 6 AI providers to extract keywords, score relevance, find content gaps, and generate a complete strategy.
 
 </td>
-<td width="33%" valign="top">
+<td width="25%" valign="top">
 
 **Track Everything**<br>
 Built-in click & impression tracking with CTR, period comparisons, Chart.js visualizations, and CSV exports.
@@ -68,6 +74,18 @@ Built-in click & impression tracking with CTR, period comparisons, Chart.js visu
 <tr>
 <td width="50%" valign="top">
 
+### Smart SEO Analysis Engine
+
+- **TF-IDF Keyword Extraction** — Porter stemmer + inverse document frequency for statistically significant keyword discovery
+- **Site Health Score** — Weighted composite score (0-100) with A-F grade across 6 SEO signals
+- **Orphan Page Detection** — Find pages with zero inbound internal links that search engines can't discover
+- **Link Distribution Analysis** — Per-page inbound/outbound counts with over-linked and under-linked detection
+- **SEO Content Scoring** — Analyses keyword placement in headings, first paragraph, meta descriptions, and image alt text
+- **Smart Recommendations** — Prioritized action items based on your site's health breakdown
+
+</td>
+<td width="50%" valign="top">
+
 ### AI-Powered Analysis
 
 - **Keyword Extraction** — AI analyses any post and returns 10-20 SEO keywords ranked by relevance
@@ -75,8 +93,11 @@ Built-in click & impression tracking with CTR, period comparisons, Chart.js visu
 - **Content Gap Analysis** — Discover posts that should link to each other but don't
 - **Auto-Generate Mappings** — One-click AI scan proposes a complete interlinking strategy
 - **One-Click Add** — Every AI suggestion has an instant "Add Mapping" button
+- **6 Providers** — OpenAI, Anthropic, Google Gemini, Mistral AI, DeepSeek, Ollama
 
 </td>
+</tr>
+<tr>
 <td width="50%" valign="top">
 
 ### Deep Analytics & Tracking
@@ -89,8 +110,6 @@ Built-in click & impression tracking with CTR, period comparisons, Chart.js visu
 - **CSV Export** — Top keywords, clicks by post, daily trend, top links
 
 </td>
-</tr>
-<tr>
 <td width="50%" valign="top">
 
 ### Smart Replacement Engine
@@ -103,17 +122,30 @@ Built-in click & impression tracking with CTR, period comparisons, Chart.js visu
 - **All post types** — Posts, pages, WooCommerce products, custom post types
 
 </td>
+</tr>
+<tr>
 <td width="50%" valign="top">
 
 ### Modern Admin Interface
 
 - **5-Tab Layout** — Dashboard, Keywords, Analysis, Analytics, Settings
+- **6 Analysis Sub-Tabs** — Extract, Score, Gaps, Generate, Orphans, Distribution
+- **Health Dashboard** — CSS gauge with animated score, breakdown bars, metric cards
+- **Toast Notifications** — Slide-in notifications with auto-dismiss
 - **AJAX Tab Switching** — No page reloads, browser back/forward supported
-- **Skeleton Loaders** — Smooth animated placeholders during data loads
-- **Sortable Tables** — Click any column header to sort
-- **Color-Coded Cards** — Blue, green, orange, purple stat cards with sparklines
-- **Bulk Operations** — Enable/disable/delete with CSV import/export
 - **Responsive** — Clean layouts on desktop, tablet, and mobile
+
+</td>
+<td width="50%" valign="top">
+
+### Developer-Friendly
+
+- **Transient Caching** — IDF index (24h), link graph (6h), replacement cache (1h)
+- **Porter Stemmer** — Built-in English word stemmer with memoization
+- **350+ Stop Words** — Comprehensive list including web/content boilerplate terms
+- **SEO Plugin Compatibility** — Reads meta from Yoast, Rank Math, and AIOSEO
+- **Bulk Operations** — Enable/disable/delete with CSV import/export
+- **i18n Ready** — Full translation support with `.pot` template
 
 </td>
 </tr>
@@ -191,6 +223,8 @@ Choose from **6 providers** — cloud APIs or fully self-hosted with Ollama. Swi
 | AI features | Optional | API key from any supported provider *(not needed for Ollama)* |
 | WooCommerce | Optional | Any version *(for product post type support)* |
 
+> The Smart SEO Analysis Engine (TF-IDF, health scoring, orphan detection, link distribution) works entirely with PHP — no AI provider or API key needed.
+
 <br>
 
 ---
@@ -225,7 +259,14 @@ git clone https://github.com/magnetoid/wp-interlinking.git wp-content/plugins/fp
 
 ## Getting Started
 
-### 1. Configure AI *(optional but recommended)*
+### 1. Check Your Site Health
+
+1. Open the **Analysis** tab — the health check runs automatically
+2. Review your **Site Health Score** (0-100, graded A through F)
+3. Read the **Smart Recommendations** for prioritized action items
+4. Use the metric cards to spot orphan pages, link gaps, and coverage issues
+
+### 2. Configure AI *(optional but recommended)*
 
 1. Open the **Settings** tab
 2. Set the Analysis Engine to **AI-Powered**
@@ -234,7 +275,7 @@ git clone https://github.com/magnetoid/wp-interlinking.git wp-content/plugins/fp
 5. For **Ollama**: enter your server base URL (e.g., `http://localhost:11434`)
 6. Click **Save All Settings**, then **Test Connection**
 
-### 2. Add Keyword Mappings
+### 3. Add Keyword Mappings
 
 There are three ways to add keywords:
 
@@ -244,18 +285,20 @@ There are three ways to add keywords:
 | **Manual** | Enter a keyword and target URL, set per-keyword overrides, click Add Keyword |
 | **CSV Import** | Upload a CSV with `keyword,url` columns for bulk import |
 
-### 3. Use AI Analysis Tools
+### 4. Use the Analysis Tools
 
-Open the **Analysis** tab to access all four AI tools:
+Open the **Analysis** tab and navigate between 6 sub-tabs:
 
-| Tool | What It Does |
+| Sub-Tab | What It Does |
 |---|---|
-| **Extract Keywords** | Select a post, AI extracts 10-20 SEO keywords from its content |
-| **Score Relevance** | Enter a keyword, AI scores your posts 1-100 as link targets |
-| **Analyse Content Gaps** | AI scans your site for posts that should cross-link but don't |
-| **Auto-Generate** | AI proposes a complete interlinking strategy for your entire site |
+| **Extract Keywords** | TF-IDF extraction from any post — or AI-powered with your chosen provider |
+| **Score Relevance** | Score your posts 1-100 as link targets for any keyword |
+| **Content Gaps** | Find posts that should cross-link but don't |
+| **Auto-Generate** | One-click scan proposes a complete interlinking strategy |
+| **Orphan Pages** | Detect pages with zero inbound internal links |
+| **Link Distribution** | Analyse inbound/outbound link counts with over-linked and under-linked detection |
 
-### 4. Monitor with Analytics
+### 5. Monitor with Analytics
 
 Open the **Analytics** tab to track performance:
 
@@ -314,7 +357,7 @@ WP Interlinking follows WordPress security best practices at every layer:
 
 ```
 fpp-interlinking/
-├── fpp-interlinking.php                          Main plugin bootstrap (v4.0.0)
+├── fpp-interlinking.php                          Main plugin bootstrap (v5.0.0)
 ├── uninstall.php                                 Multisite-safe cleanup on delete
 ├── readme.txt                                    WordPress.org readme
 │
@@ -323,18 +366,18 @@ fpp-interlinking/
 │   ├── class-fpp-interlinking-deactivator.php    Cache cleanup on deactivation
 │   ├── class-fpp-interlinking-db.php             CRUD + duplicate detection
 │   ├── class-fpp-interlinking-ai.php             6-provider AI integration
-│   ├── class-fpp-interlinking-analyzer.php       Internal PHP analysis engine
+│   ├── class-fpp-interlinking-analyzer.php       TF-IDF, stemmer, health score, link graph
 │   ├── class-fpp-interlinking-analytics.php      Click / impression / CTR engine
-│   ├── class-fpp-interlinking-admin.php          Admin UI + 30 AJAX endpoints
+│   ├── class-fpp-interlinking-admin.php          Admin UI + 34 AJAX endpoints
 │   └── class-fpp-interlinking-replacer.php       Front-end filter + impressions
 │
 ├── assets/
 │   ├── js/
-│   │   ├── fpp-interlinking-admin.js             Admin UI (50+ methods)
+│   │   ├── fpp-interlinking-admin.js             Admin UI (60+ methods)
 │   │   ├── fpp-interlinking-tracker.js            Front-end click tracker
 │   │   └── chart.min.js                          Chart.js v4.4.7 (bundled)
 │   └── css/
-│       └── fpp-interlinking-admin.css            Cards, charts, skeletons, responsive
+│       └── fpp-interlinking-admin.css            Health gauge, sub-tabs, toasts, responsive
 │
 └── languages/
     └── fpp-interlinking.pot                      Translation template (i18n ready)
@@ -349,6 +392,44 @@ fpp-interlinking/
 ## Changelog
 
 <details open>
+<summary><strong>5.0.0</strong> — Smart SEO Analysis Engine & UI Overhaul</summary>
+
+<br>
+
+**Analysis Engine**
+- **TF-IDF keyword extraction** — Porter stemmer + inverse document frequency replaces raw term frequency
+- **Site Health Score** — weighted composite (0-100) with A-F grade across 6 signals: orphan ratio, avg links/post, keyword coverage, link distribution evenness, active keyword ratio, content structure
+- **Orphan page detection** — finds pages with zero inbound internal links
+- **Link distribution analysis** — per-page inbound/outbound counts, identifies over-linked and under-linked pages
+- **SEO content scoring** — analyses keyword placement in headings, first paragraph, meta descriptions (Yoast, Rank Math, AIOSEO), and image alt text
+- **Internal link graph** — builds full site link map with URL normalization, cached as 6-hour transient
+- **Porter stemmer** — English word root reduction with memoization cache
+- **350+ stop words** — expanded from ~200 with web/content boilerplate terms
+- **IDF index caching** — document-frequency map cached as 24-hour transient
+
+**Improved Existing Analysis**
+- `score_relevance()` — new signals: heading match (+15), category/tag match (+10), stemmed word matching
+- `analyse_content_gaps()` — stemmed inverted index, configurable max results (default 25)
+- `auto_generate_mappings()` — raised threshold to 55, extracts 8 keywords/post, max 30 proposals
+
+**Admin UI**
+- **Health dashboard** — CSS-only circular gauge with animated score, grade badge, breakdown bars with fill animation
+- **6 analysis sub-tabs** — Extract, Score, Gaps, Generate, Orphans, Distribution with smooth switching
+- **Metric cards** — 4-column grid showing orphan pages, avg links, coverage %, keyword utilization
+- **Smart recommendations** — prioritized action items (high/medium/low) based on health breakdown
+- **Toast notifications** — fixed-position slide-in toasts replace inline WordPress notices
+- **Button spinners** — reusable loading state for all async operations
+- **Tooltips** — dark background with arrow pointer on hover
+
+**Under the Hood**
+- 4 new AJAX endpoints: health check, orphan detection, link distribution, SEO content analysis
+- Analysis transient cache invalidation when post type settings change
+- Number formatting with locale-aware comma separators
+- Responsive health dashboard — stacks on tablet and mobile
+
+</details>
+
+<details>
 <summary><strong>4.0.0</strong> — Multi-Provider AI, Deep Analytics, Modern UI</summary>
 
 <br>
